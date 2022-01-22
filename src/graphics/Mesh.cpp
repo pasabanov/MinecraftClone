@@ -2,7 +2,55 @@
 
 
 
-Mesh::Mesh(const float* buffer, uint verticesCount, const int* attrs) : mVerticesCount(verticesCount) {
+void Mesh::glDelete() {
+    glDeleteVertexArrays(1, &mVAO);
+    glDeleteBuffers(1, &mVBO);
+}
+
+
+
+Mesh::Mesh() {}
+
+Mesh::Mesh(const float* buffer, uint verticesCount, const int* attrs) {
+    create(buffer, verticesCount, attrs);
+}
+
+Mesh::Mesh(Mesh&& other)
+: mVAO(other.mVAO), mVBO(other.mVBO), mVerticesCount(other.mVerticesCount) {
+    other.mVAO = other.mVBO = other.mVerticesCount = 0;
+}
+
+
+
+Mesh::~Mesh() {
+    glDelete();
+}
+
+
+
+Mesh& Mesh::operator=(Mesh&& other) {
+    mVAO = other.mVAO;
+    mVBO = other.mVBO;
+    mVerticesCount = other.mVerticesCount;
+    other.mVAO = other.mVBO = other.mVerticesCount = 0;
+    return *this;
+}
+
+
+
+void Mesh::draw(uint primitive) const {
+    glBindVertexArray(mVAO);
+    glDrawArrays(primitive, 0, mVerticesCount);
+    glBindVertexArray(-1);
+}
+
+
+
+void Mesh::create(const float* buffer, uint verticesCount, const int* attrs) {
+
+    glDelete();
+
+    mVerticesCount = verticesCount;
 
     int vertex_size = 0;
     for (int i = 0; attrs[i]; ++i)
@@ -24,19 +72,5 @@ Mesh::Mesh(const float* buffer, uint verticesCount, const int* attrs) : mVertice
         offset += size;
     }
 
-    glBindVertexArray(-1);
-}
-
-
-Mesh::~Mesh() {
-    glDeleteVertexArrays(1, &mVAO);
-    glDeleteBuffers(1, &mVBO);
-}
-
-
-
-void Mesh::draw(uint primitive) {
-    glBindVertexArray(mVAO);
-    glDrawArrays(primitive, 0, mVerticesCount);
     glBindVertexArray(-1);
 }

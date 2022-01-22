@@ -2,19 +2,17 @@
 
 #include "window/Window.h"
 #include "graphics/Shader.h"
-#include "graphics/Texture.h"
+#include "graphics/Texture2D.h"
 #include "graphics/Mesh.h"
 #include "graphics/VoxelsRenderer.h"
 #include "voxel/Chunk.h"
 #include "camera/Camera.h"
 #include "time/Clock.h"
-
-const int WINDOW_WIDTH = 1280;
-const int WINDOW_HEIGHT = 720;
+#include "voxel/ChunkHeap.h"
 
 int main() {
 
-    Window window (WINDOW_WIDTH, WINDOW_HEIGHT, "Window");
+    Window window ("Window");
 
     Shader shader;
 
@@ -25,29 +23,33 @@ int main() {
         return 1;
     }
 
-    Texture texture;
+    Texture2D texture;
 
     try {
         texture.load("../res/images/blocks.png");
-    } catch (const Texture::TextureCreationException& exception) {
+    } catch (const Texture2D::TextureCreationException& exception) {
         std::cerr << "failed to load texture\n";
         return 1;
     }
 
-    VoxelsRenderer renderer (1024 * 1024);
+    VoxelsRenderer renderer;
 
-    Chunk chunk;
+    ChunkHeap chunks (8, 2, 8);
 
-    Mesh mesh = renderer.render(chunk);
+    MeshHeap meshHeap = renderer.render(chunks);
+
+//    std::vector<Mesh> meshes;
+//    std::for_each(chunks.mChunks.begin(), chunks.mChunks.end(),
+//                  [&](const Chunk& ch) { meshes.push_back(renderer.render(ch)); });
 
     glClearColor(0.6f,0.62f,0.65f,1);
 
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
+//    glEnable(GL_CULL_FACE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    Camera camera (&window, glm::vec3(0, 0, 1), glm::radians(70.0f));
+    Camera camera;
 
     glm::mat4 model(1.0f);
 
@@ -106,10 +108,26 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shader.use();
-        shader.uniformMatrix("model", model);
-        shader.uniformMatrix("projview", camera.getProjection() * camera.getView());
+//        shader.setModel(model);
+        shader.setProjView(camera.getProjView());
         texture.bind();
-        mesh.draw(GL_TRIANGLES);
+        for (int i = 0; i < meshHeap.size(); ++i) {
+            shader.setModel(meshHeap.getModel(i));
+            meshHeap.getMesh(i).draw();
+        }
+//        for (int i = 0; i < meshes.size(); ++i) {
+//            model = glm::mat4(1);
+//            model = glm::translate(
+//                    model,
+//                    glm::vec3(
+//                            chunks.mChunks[i].mXPos*Chunk::WIDTH,
+//                            chunks.mChunks[i].mYPos*Chunk::HEIGHT,
+//                            chunks.mChunks[i].mZPos*Chunk::LENGTH
+//                            )
+//                    );
+//            shader.setModel(model);
+//            meshes[i].draw(GL_TRIANGLES);
+//        }
 
         window.swapBuffers();
     }

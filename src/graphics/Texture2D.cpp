@@ -1,18 +1,32 @@
-#include "Texture.h"
+#include "Texture2D.h"
 
 
 
-Texture::Texture(uint id, uint width, uint height) : mId(id), mWidth(width), mHeight(height) {}
+Texture2D::Texture2D(uint id, uint width, uint height) : mId(id), mWidth(width), mHeight(height) {}
+
+Texture2D::Texture2D(Texture2D&& other) : mId(other.mId), mWidth(other.mWidth), mHeight(other.mHeight) {
+    other.mId = other.mWidth = other.mHeight = 0;
+}
 
 
 
-Texture::~Texture() {
+Texture2D::~Texture2D() {
     glDeleteTextures(1, &mId);
 }
 
 
 
-void Texture::load(const std::string& filename) {
+Texture2D& Texture2D::operator=(Texture2D&& other) {
+    mId = other.mId;
+    mWidth = other.mWidth;
+    mHeight = other.mHeight;
+    other.mId = other.mWidth = other.mHeight = 0;
+    return *this;
+}
+
+
+
+void Texture2D::load(const std::string& filename) {
 
     uchar* image = SOIL_load_image(
             filename.c_str(),
@@ -52,6 +66,6 @@ void Texture::load(const std::string& filename) {
 }
 
 
-void Texture::bind() const {
+void Texture2D::bind() const {
     glBindTexture(GL_TEXTURE_2D, mId);
 }

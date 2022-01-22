@@ -2,12 +2,31 @@
 
 
 
+void Shader::uniformMatrix(const std::string& name, const glm::mat4& matrix) const {
+    uint transformLoc = glGetUniformLocation(mId, name.c_str());
+    glUniformMatrix4fv(transformLoc, 1, false, glm::value_ptr(matrix));
+}
+
+
+
 Shader::Shader(uint id) : mId(id) {}
+
+Shader::Shader(Shader&& other) : mId(other.mId) {
+    other.mId = -1;
+}
 
 
 
 Shader::~Shader() {
     glDeleteProgram(mId);
+}
+
+
+
+Shader& Shader::operator=(Shader&& other) {
+    mId = other.mId;
+    other.mId = -1;
+    return *this;
 }
 
 
@@ -111,13 +130,18 @@ void Shader::load(const std::string& vertexFilename, const std::string& fragment
 
 
 
-void Shader::use() const {
-    glUseProgram(mId);
+void Shader::setModel(const glm::mat4& model) const {
+    uniformMatrix("model", model);
 }
 
 
 
-void Shader::uniformMatrix(const std::string& name, const glm::mat4& matrix) const {
-    uint transformLoc = glGetUniformLocation(mId, name.c_str());
-    glUniformMatrix4fv(transformLoc, 1, false, glm::value_ptr(matrix));
+void Shader::setProjView(const glm::mat4& projview) const {
+    uniformMatrix("projview", projview);
+}
+
+
+
+void Shader::use() const {
+    glUseProgram(mId);
 }

@@ -3,8 +3,8 @@
 
 #include "../headers/includes.h"
 
-#include "Mesh.h"
-#include "../voxel/Chunk.h"
+#include "MeshHeap.h"
+#include "../voxel/ChunkHeap.h"
 
 class VoxelsRenderer {
 
@@ -14,17 +14,17 @@ class VoxelsRenderer {
             1, // light
             0, // null-terminator
     };
-    inline static const int VERTEX_SIZE = CHUNK_ATTRS.size() - 1;
+    inline static const int VERTEX_SIZE = std::accumulate(CHUNK_ATTRS.begin(), CHUNK_ATTRS.end(), 0);
 
     std::vector<float> mBuffer;
 
-    void writeVertex(uint& index, float x, float y, float z, float u, float v, float l);
+    void writeVertex(float x, float y, float z, float u, float v, float l);
 
 public:
 
-    VoxelsRenderer(uint capacity);
+    VoxelsRenderer(uint startCapacity = 1024);
 
-    Mesh render(const Chunk& chunk);
+    MeshHeap render(const ChunkHeap& chunks);
 };
 
 #endif //MINECRAFT_VOXELSRENDERER_H

@@ -99,8 +99,8 @@ void Window::setCursorMode(int mode) const {
 
 
 
-Window::Window(int width, int height, const std::string& title)
-: mWidth(width), mHeight(height), mTitle(title), mKeys(N_KEYS), mButtons(N_BUTTONS) {
+Window::Window(const std::string& title, int width, int height)
+: mTitle(title), mWidth(width), mHeight(height), mKeys(N_KEYS), mButtons(N_BUTTONS) {
 
     if (glfwInit() != GLFW_TRUE)
         throw WindowCreationError("Failed to init GLFW");

@@ -48,12 +48,15 @@ public:
 
 public:
 
+    inline static int DEFAULT_WIDTH = 1280;
+    inline static int DEFAULT_HEIGHT = 720;
+
     class WindowCreationError : public MessageException {
     public:
         WindowCreationError(const std::string& message) : MessageException(message) {}
     };
 
-    Window(int width, int height, const std::string& title);
+    Window(const std::string& title, int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT);
 
     ~Window();
 

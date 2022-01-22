@@ -17,6 +17,13 @@
 // time
 #include <chrono>
 
+// math
+#include <cmath>
+#include <numeric>
+
+// functions
+#include <functional>
+
 // opengl
 #define GLEW_STATIC
 #include <GL/glew.h>

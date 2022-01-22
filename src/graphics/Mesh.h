@@ -8,13 +8,21 @@ class Mesh {
     uint mVAO, mVBO;
     uint mVerticesCount;
 
+    void glDelete();
+
 public:
 
+    Mesh();
     Mesh(const float* buffer, uint verticesCount, const int* attrs);
+    Mesh(Mesh&& other);
 
     ~Mesh();
 
-    void draw(uint primitive);
+    Mesh& operator=(Mesh&& other);
+
+    void create(const float* buffer, uint verticesCount, const int* attrs);
+
+    void draw(uint primitive = GL_TRIANGLES) const;
 };
 
 #endif //MINECRAFT_MESH_H

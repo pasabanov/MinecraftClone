@@ -1,5 +1,4 @@
 #include "Camera.h"
-#include "../window/Window.h"
 
 
 
@@ -12,8 +11,8 @@ void Camera::updateVectors() {
 
 
 
-Camera::Camera(Window* window, const glm::vec3& position, float fieldOfView)
-: mWindow(window), mPosition(position), mFieldOfView(fieldOfView), mRotation(1) {
+Camera::Camera(const glm::vec3& position, float fieldOfView, float aspect, float zNear, float zFar)
+: mPosition(position), mFieldOfView(fieldOfView), mAspect(aspect), mZNear(zNear), mZFar(zFar), mRotation(1) {
     updateVectors();
 }
 
@@ -58,13 +57,54 @@ void Camera::setRotation(const glm::mat4& rotation) {
 
 
 
+float Camera::getAspect() const {
+    return mAspect;
+}
+
+
+
+void Camera::setAspect(float aspect) {
+    mAspect = aspect;
+}
+
+
+
+float Camera::getZNear() const {
+    return mZNear;
+}
+
+
+
+void Camera::setZNear(float zNear) {
+    mZNear = zNear;
+}
+
+
+
+float Camera::getZFar() const {
+    return mZFar;
+}
+
+
+
+void Camera::setZFar(float zFar) {
+    mZFar = zFar;
+}
+
+
+
 glm::mat4 Camera::getProjection() const {
-    float aspect = ((float) mWindow->getWidth()) / ((float) mWindow->getHeight());
-    return glm::perspective(mFieldOfView, aspect, Z_NEAR, Z_FAR);
+    return glm::perspective(mFieldOfView, mAspect, mZNear, mZFar);
 }
 
 
 
 glm::mat4 Camera::getView() const {
     return glm::lookAt(mPosition, mPosition + mFront, mUp);
+}
+
+
+
+glm::mat4 Camera::getProjView() const {
+    return getProjection() * getView();
 }
