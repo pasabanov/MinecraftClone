@@ -12,95 +12,101 @@ Shader::~Shader() {
 
 
 
-void Shader::load(const std::string& vertexFile, const std::string& fragmentFile) {
+void Shader::load(const std::string& vertexFilename, const std::string& fragmentFilename) {
 
-    std::string vertexCode;
-    std::string fragmentCode;
-    std::ifstream vShaderFile;
-    std::ifstream fShaderFile;
+    std::string strVertexCode;
+    std::string strFragmentCode;
+    std::ifstream vertexFile;
+    std::ifstream fragmentFile;
 
-    vShaderFile.exceptions(std::ifstream::badbit);
-    fShaderFile.exceptions(std::ifstream::badbit);
+    vertexFile.exceptions(std::ifstream::badbit);
+    fragmentFile.exceptions(std::ifstream::badbit);
+
     try {
 
-        vShaderFile.open(vertexFile);
-        fShaderFile.open(fragmentFile);
+        vertexFile.open(vertexFilename);
+        fragmentFile.open(fragmentFilename);
 
         std::stringstream vShaderStream, fShaderStream;
 
-        vShaderStream << vShaderFile.rdbuf();
-        fShaderStream << fShaderFile.rdbuf();
+        vShaderStream << vertexFile.rdbuf();
+        fShaderStream << fragmentFile.rdbuf();
 
-        vShaderFile.close();
-        fShaderFile.close();
+        vertexFile.close();
+        fragmentFile.close();
 
-        vertexCode = vShaderStream.str();
-        fragmentCode = fShaderStream.str();
-    } catch(const std::ifstream::failure& e) {
+        strVertexCode = vShaderStream.str();
+        strFragmentCode = fShaderStream.str();
+
+    } catch (const std::ifstream::failure& e) {
+
         std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ" << std::endl;
 
         throw ShaderCreationException();
     }
 
-    const char* vShaderCode = vertexCode.c_str();
-    const char* fShaderCode = fragmentCode.c_str();
+    const char* vertexCode = strVertexCode.c_str();
+    const char* fragmentCode = strFragmentCode.c_str();
 
     uint vertex, fragment;
     int success;
-    char infoLog[512];
+    int infoLogBuffSize = 1024;
+    char infoLogBuff[infoLogBuffSize];
 
     // Vertex Shader
     vertex = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex, 1, &vShaderCode, nullptr);
+    glShaderSource(vertex, 1, &vertexCode, nullptr);
     glCompileShader(vertex);
+
     glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
     if (!success) {
-        glGetShaderInfoLog(vertex, 512, nullptr, infoLog);
+        glGetShaderInfoLog(vertex, infoLogBuffSize, nullptr, infoLogBuff);
         std::cerr << "SHADER::VERTEX: compilation failed\n";
-        std::cerr << infoLog << '\n';
+        std::cerr << infoLogBuff << '\n';
 
         throw ShaderCreationException();
     }
 
     // Fragment Shader
     fragment = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment, 1, &fShaderCode, nullptr);
+    glShaderSource(fragment, 1, &fragmentCode, nullptr);
     glCompileShader(fragment);
+
     glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
     if (!success) {
-        glGetShaderInfoLog(fragment, 512, nullptr, infoLog);
+        glGetShaderInfoLog(fragment, infoLogBuffSize, nullptr, infoLogBuff);
         std::cerr << "SHADER::FRAGMENT: compilation failed\n";
-        std::cerr << infoLog << '\n';
+        std::cerr << infoLogBuff << '\n';
 
         glDeleteShader(vertex);
 
         throw ShaderCreationException();
     }
 
-    uint id = glCreateProgram();
-    glAttachShader(id, vertex);
-    glAttachShader(id, fragment);
-    glLinkProgram(id);
+    mId = glCreateProgram();
+    glAttachShader(mId, vertex);
+    glAttachShader(mId, fragment);
+    glLinkProgram(mId);
 
-    glGetProgramiv(id, GL_LINK_STATUS, &success);
+    glGetProgramiv(mId, GL_LINK_STATUS, &success);
     if (!success) {
-        glGetShaderInfoLog(id, 512, nullptr, infoLog);
+        glGetShaderInfoLog(mId, infoLogBuffSize, nullptr, infoLogBuff);
         std::cerr << "SHADER::PROGRAM: linking failed\n";
-        std::cerr << infoLog << '\n';
+        std::cerr << infoLogBuff << '\n';
 
+        glDetachShader(mId, vertex);
+        glDetachShader(mId, fragment);
         glDeleteShader(vertex);
         glDeleteShader(fragment);
-        glDeleteProgram(id);
+        glDeleteProgram(mId);
 
         throw ShaderCreationException();
     }
 
-    glDetachShader(id, vertex);
-    glDetachShader(id, fragment);
+    glDetachShader(mId, vertex);
+    glDetachShader(mId, fragment);
     glDeleteShader(vertex);
     glDeleteShader(fragment);
-
-    mId = id;
 }
 
 

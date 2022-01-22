@@ -2,6 +2,7 @@
 #define MINECRAFT_WINDOW_H
 
 #include "../headers/includes.h"
+#include "../exception/MessageException.h"
 
 class Window {
 public:
@@ -14,10 +15,11 @@ public:
     inline static const int N_KEYS = 1024;
     inline static const int N_BUTTONS = 12;
 
-    inline static std::map<GLFWwindow*, Window*> sWindows;
+    inline static std::map<GLFWwindow*,Window*> sWindows;
 
     GLFWwindow* mWindow;
     int mWidth, mHeight;
+    std::string mTitle;
 
     std::vector<Key> mKeys; // keyboard
     std::vector<Key> mButtons; // mouse
@@ -26,10 +28,8 @@ public:
     double mDeltaY = 0;
     double mX = 0;
     double mY = 0;
-    bool mCursorDisabled = false;
     bool mCursorStarted = false;
-
-    static void error(const std::string& message);
+    bool mCursorDisabled = false;
 
     static void cursorPositionCallback(GLFWwindow* glwindow, double xpos, double ypos);
     static void mouseButtonCallback(GLFWwindow* glwindow, int button, int action, int mode);
@@ -48,6 +48,11 @@ public:
 
 public:
 
+    class WindowCreationError : public MessageException {
+    public:
+        WindowCreationError(const std::string& message) : MessageException(message) {}
+    };
+
     Window(int width, int height, const std::string& title);
 
     ~Window();
@@ -65,11 +70,16 @@ public:
     bool buttonPressed(int button) const;
     bool buttonJustPressed(int button) const;
 
+    void disableCursor();
+    void enableCursor();
     void toggleCursor();
     bool isCursorDisabled() const;
 
     int getWidth() const;
     int getHeight() const;
+
+    const std::string& getTitle() const;
+    void setTitle(const std::string& title);
 };
 
 #endif //MINECRAFT_WINDOW_H

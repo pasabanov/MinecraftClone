@@ -1,17 +1,11 @@
 #ifndef MINECRAFT_SHADER_H
 #define MINECRAFT_SHADER_H
 
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-
 #include "../headers/includes.h"
 
 class Shader {
 
     uint mId;
-
 
 public:
 
@@ -21,7 +15,7 @@ public:
 
     ~Shader();
 
-    void load(const std::string& vertexFile, const std::string& fragmentFile);
+    void load(const std::string& vertexFilename, const std::string& fragmentFilename);
 
     void use() const;
 

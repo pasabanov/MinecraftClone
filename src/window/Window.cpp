@@ -2,14 +2,6 @@
 
 
 
-void Window::error(const std::string& message) {
-    std::cerr << message << '\n';
-    glfwTerminate();
-    exit(1);
-}
-
-
-
 void Window::cursorPositionCallback(GLFWwindow* glwindow, double xpos, double ypos) {
     Window* window = sWindows[glwindow];
     if (window != nullptr)
@@ -90,7 +82,7 @@ void Window::windowSizeCallback(int width, int height) {
 
 
 void Window::registerWindow() const {
-    sWindows[mWindow] = (Window*) this;
+    sWindows[mWindow] = const_cast<Window*>(this);
 }
 
 
@@ -108,22 +100,27 @@ void Window::setCursorMode(int mode) const {
 
 
 Window::Window(int width, int height, const std::string& title)
-: mWidth(width), mHeight(height), mKeys(N_KEYS), mButtons(N_BUTTONS) {
+: mWidth(width), mHeight(height), mTitle(title), mKeys(N_KEYS), mButtons(N_BUTTONS) {
 
-    glfwInit();
+    if (glfwInit() != GLFW_TRUE)
+        throw WindowCreationError("Failed to init GLFW");
+
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, true);
 
-    mWindow = glfwCreateWindow(width, height, "Window", nullptr, nullptr);
+    mWindow = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+
     if (mWindow == nullptr)
-        error("Failed to create window");
+        throw WindowCreationError("Failed to create window");
+
     glfwMakeContextCurrent(mWindow);
 
     glewExperimental = true;
+
     if (glewInit() != GLEW_OK)
-        error("Failed to initialize GLEW");
+        throw WindowCreationError("Failed to initialize GLEW");
 
     glViewport(0, 0, width, height);
 
@@ -212,6 +209,22 @@ bool Window::buttonJustPressed(int button) const {
 
 
 
+void Window::disableCursor() {
+    if (isCursorDisabled())
+        return;
+    setCursorMode(GLFW_CURSOR_DISABLED);
+}
+
+
+
+void Window::enableCursor() {
+    if (!isCursorDisabled())
+        return;
+    setCursorMode(GLFW_CURSOR_NORMAL);
+}
+
+
+
 void Window::toggleCursor() {
     mCursorDisabled = !mCursorDisabled;
     setCursorMode(mCursorDisabled ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
@@ -233,4 +246,17 @@ int Window::getWidth() const {
 
 int Window::getHeight() const {
     return mHeight;
+}
+
+
+
+const std::string& Window::getTitle() const {
+    return mTitle;
+}
+
+
+
+void Window::setTitle(const std::string& title) {
+    mTitle = title;
+    glfwSetWindowTitle(mWindow, title.c_str());
 }

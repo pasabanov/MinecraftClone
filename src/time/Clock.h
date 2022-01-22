@@ -3,7 +3,7 @@
 
 #include "../headers/includes.h"
 
-timespec operator-(timespec start, timespec stop);
+timespec operator-(const timespec& start, const timespec& stop);
 
 class Clock {
 

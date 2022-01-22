@@ -2,7 +2,7 @@
 
 
 
-timespec operator-(timespec start, timespec stop) {
+timespec operator-(const timespec& start, const timespec& stop) {
     timespec result { stop.tv_sec - start.tv_sec, stop.tv_nsec - start.tv_nsec };
     if (stop.tv_nsec - start.tv_nsec < 0) {
         result.tv_sec -= 1;

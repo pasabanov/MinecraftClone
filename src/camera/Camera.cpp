@@ -20,13 +20,13 @@ Camera::Camera(Window* window, const glm::vec3& position, float fieldOfView)
 
 
 void Camera::move(const glm::vec3& vec) {
-    mPosition += vec;
+    mPosition = vec;
 }
 
 
 
 void Camera::moveDirect(const glm::vec3& vec) {
-    mPosition = vec;
+    mPosition += vec;
 }
 
 

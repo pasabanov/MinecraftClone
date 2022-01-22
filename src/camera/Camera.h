@@ -7,7 +7,7 @@ class Window; // pre-declaration
 
 class Camera {
 
-        inline static const float Z_NEAR = 0.1;
+    inline static const float Z_NEAR = 0.1;
     inline static const float Z_FAR = 100;
 
     Window* mWindow;
@@ -22,7 +22,7 @@ class Camera {
 
 public:
 
-    Camera(Window* window, const glm::vec3& position, float fieldOfView);
+    Camera(Window* window, const glm::vec3& position = { 0, 0, 0 }, float fieldOfView = glm::radians(70.0f));
 
     void move(const glm::vec3& vec);
     void moveDirect(const glm::vec3& vec);

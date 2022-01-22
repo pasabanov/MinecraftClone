@@ -7,8 +7,15 @@
 #include <sstream>
 
 // containers
+#include <string>
 #include <vector>
 #include <map>
+
+// exceptions
+#include <exception>
+
+// time
+#include <chrono>
 
 // opengl
 #define GLEW_STATIC
