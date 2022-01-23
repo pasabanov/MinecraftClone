@@ -5,14 +5,16 @@
 
 class Texture2D {
 
-    uint mId;
-    uint mWidth, mHeight;
+    uint mId = GL_NONE;
+    uint mWidth = 0, mHeight = 0;
+
+    void glDelete();
 
 public:
 
     class TextureCreationException : public std::exception {};
 
-    Texture2D(uint id = (uint)-1, uint width = (uint)-1, uint height = (uint)-1);
+    Texture2D(uint id = GL_NONE, uint width = GL_NONE, uint height = GL_NONE);
     Texture2D(Texture2D&& other);
 
     ~Texture2D();

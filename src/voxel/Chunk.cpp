@@ -25,12 +25,12 @@ void Chunk::generateVoxels(const VoxelGenerator& generator) {
 
 
 
-Voxel& Chunk::voxel(uint x, uint y, uint z) {
+Voxel& Chunk::getVoxel(uint x, uint y, uint z) {
     return mVoxels[(y * LENGTH + z) * WIDTH + x];
 }
 
-Voxel& Chunk::voxel(const glm::vec3& pos) {
-    return voxel(pos.x, pos.y, pos.z);
+Voxel& Chunk::getVoxel(const glm::vec3& pos) {
+    return getVoxel(pos.x, pos.y, pos.z);
 }
 
 
@@ -39,7 +39,7 @@ const Voxel& Chunk::getVoxel(uint x, uint y, uint z) const {
     return mVoxels[(y * LENGTH + z) * WIDTH + x];
 }
 
-const Voxel& Chunk::getVoxel(const glm::vec3& pos) {
+const Voxel& Chunk::getVoxel(const glm::vec3& pos) const {
     return getVoxel(pos.x, pos.y, pos.z);
 }
 
@@ -47,8 +47,20 @@ const Voxel& Chunk::getVoxel(const glm::vec3& pos) {
 
 void Chunk::setVoxel(uint x, uint y, uint z, const Voxel& voxel) {
     mVoxels[(y * LENGTH + z) * WIDTH + x] = voxel;
+    setModified(true);
 }
 
 void Chunk::setVoxel(const glm::vec3& pos, const Voxel& voxel) {
     setVoxel(pos.x, pos.y, pos.z, voxel);
+    setModified(true);
+}
+
+
+
+bool Chunk::isModified() const {
+    return mModified;
+}
+
+void Chunk::setModified(bool modified) {
+    mModified = modified;
 }

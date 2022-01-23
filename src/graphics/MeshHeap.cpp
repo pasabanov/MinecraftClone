@@ -2,7 +2,7 @@
 
 
 
-MeshHeap::MeshHeap() {}
+MeshHeap::MeshHeap(int size) : mMeshes(size), mModels(size) {}
 
 
 
@@ -12,15 +12,15 @@ int MeshHeap::size() const {
 
 
 
-void MeshHeap::add(Mesh&& mesh, const glm::vec3& offset) {
+void MeshHeap::set(Mesh&& mesh, const glm::vec3& offset, int index) {
     glm::mat4 model (1);
     model = glm::translate(model, offset);
-    add(std::move(mesh), model);
+    set(std::move(mesh), model, index);
 }
 
-void MeshHeap::add(Mesh&& mesh, const glm::mat4& model) {
-    mMeshes.push_back(std::move(mesh));
-    mModels.push_back(model);
+void MeshHeap::set(Mesh&& mesh, const glm::mat4& model, int index) {
+    mMeshes[index] = std::move(mesh);
+    mModels[index] = model;
 }
 
 

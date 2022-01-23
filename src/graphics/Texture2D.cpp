@@ -2,25 +2,36 @@
 
 
 
-Texture2D::Texture2D(uint id, uint width, uint height) : mId(id), mWidth(width), mHeight(height) {}
-
-Texture2D::Texture2D(Texture2D&& other) : mId(other.mId), mWidth(other.mWidth), mHeight(other.mHeight) {
-    other.mId = other.mWidth = other.mHeight = 0;
-}
-
-
-
-Texture2D::~Texture2D() {
+void Texture2D::glDelete() {
     glDeleteTextures(1, &mId);
 }
 
 
 
+Texture2D::Texture2D(uint id, uint width, uint height) : mId(id), mWidth(width), mHeight(height) {}
+
+Texture2D::Texture2D(Texture2D&& other) : mId(other.mId), mWidth(other.mWidth), mHeight(other.mHeight) {
+    other.mId = other.mWidth = other.mHeight = GL_NONE;
+}
+
+
+
+Texture2D::~Texture2D() {
+    glDelete();
+}
+
+
+
 Texture2D& Texture2D::operator=(Texture2D&& other) {
+
+    glDelete();
+
     mId = other.mId;
     mWidth = other.mWidth;
     mHeight = other.mHeight;
-    other.mId = other.mWidth = other.mHeight = 0;
+
+    other.mId = other.mWidth = other.mHeight = GL_NONE;
+
     return *this;
 }
 
@@ -48,8 +59,6 @@ void Texture2D::load(const std::string& filename) {
     glGenTextures(1, &mId);
     glBindTexture(GL_TEXTURE_2D, mId);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexImage2D(
             GL_TEXTURE_2D,
             0,
@@ -60,7 +69,11 @@ void Texture2D::load(const std::string& filename) {
             GL_RGBA,
             GL_UNSIGNED_BYTE,
             image);
-    glBindTexture(GL_TEXTURE_2D, -1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 5);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, GL_NONE);
 
     SOIL_free_image_data(image);
 }

@@ -5,8 +5,8 @@
 
 class Mesh {
 
-    uint mVAO, mVBO;
-    uint mVerticesCount;
+    uint mVAO = GL_NONE, mVBO = GL_NONE;
+    uint mVerticesCount = 0;
 
     void glDelete();
 

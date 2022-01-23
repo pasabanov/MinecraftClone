@@ -5,7 +5,9 @@
 
 class Shader {
 
-    uint mId;
+    uint mId = GL_NONE;
+
+    void glDelete();
 
     void uniformMatrix(const std::string& name, const glm::mat4& matrix) const;
 
@@ -13,7 +15,7 @@ public:
 
     class ShaderCreationException : public std::exception {};
 
-    explicit Shader(uint id = (uint)-1);
+    explicit Shader(uint id = GL_NONE);
     Shader(Shader&& other);
 
     ~Shader();

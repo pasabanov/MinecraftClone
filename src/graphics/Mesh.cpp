@@ -17,7 +17,7 @@ Mesh::Mesh(const float* buffer, uint verticesCount, const int* attrs) {
 
 Mesh::Mesh(Mesh&& other)
 : mVAO(other.mVAO), mVBO(other.mVBO), mVerticesCount(other.mVerticesCount) {
-    other.mVAO = other.mVBO = other.mVerticesCount = 0;
+    other.mVAO = other.mVBO = other.mVerticesCount = GL_NONE;
 }
 
 
@@ -29,10 +29,15 @@ Mesh::~Mesh() {
 
 
 Mesh& Mesh::operator=(Mesh&& other) {
+
+    glDelete();
+
     mVAO = other.mVAO;
     mVBO = other.mVBO;
     mVerticesCount = other.mVerticesCount;
-    other.mVAO = other.mVBO = other.mVerticesCount = 0;
+
+    other.mVAO = other.mVBO = other.mVerticesCount = GL_NONE;
+
     return *this;
 }
 
@@ -41,7 +46,7 @@ Mesh& Mesh::operator=(Mesh&& other) {
 void Mesh::draw(uint primitive) const {
     glBindVertexArray(mVAO);
     glDrawArrays(primitive, 0, mVerticesCount);
-    glBindVertexArray(-1);
+    glBindVertexArray(GL_NONE);
 }
 
 
@@ -72,5 +77,5 @@ void Mesh::create(const float* buffer, uint verticesCount, const int* attrs) {
         offset += size;
     }
 
-    glBindVertexArray(-1);
+    glBindVertexArray(GL_NONE);
 }

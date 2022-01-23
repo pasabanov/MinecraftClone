@@ -2,6 +2,12 @@
 
 
 
+void Shader::glDelete() {
+    glDeleteProgram(mId);
+}
+
+
+
 void Shader::uniformMatrix(const std::string& name, const glm::mat4& matrix) const {
     uint transformLoc = glGetUniformLocation(mId, name.c_str());
     glUniformMatrix4fv(transformLoc, 1, false, glm::value_ptr(matrix));
@@ -12,20 +18,25 @@ void Shader::uniformMatrix(const std::string& name, const glm::mat4& matrix) con
 Shader::Shader(uint id) : mId(id) {}
 
 Shader::Shader(Shader&& other) : mId(other.mId) {
-    other.mId = -1;
+    other.mId = GL_NONE;
 }
 
 
 
 Shader::~Shader() {
-    glDeleteProgram(mId);
+    glDelete();
 }
 
 
 
 Shader& Shader::operator=(Shader&& other) {
+
+    glDelete();
+
     mId = other.mId;
-    other.mId = -1;
+
+    other.mId = GL_NONE;
+
     return *this;
 }
 

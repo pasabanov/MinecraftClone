@@ -15,3 +15,9 @@ uint Voxel::getId() const {
 void Voxel::setId(uint id) {
     mId = id;
 }
+
+
+
+bool Voxel::operator==(const Voxel& other) {
+    return mId == other.mId;
+}

@@ -8,13 +8,13 @@
 
 class VoxelsRenderer {
 
-    inline static const std::vector<int> CHUNK_ATTRS = {
+    inline static const std::vector<int> VERTEX_ATTRS = {
             3, // x, y, z
             2, // texture coords
             1, // light
             0, // null-terminator
     };
-    inline static const int VERTEX_SIZE = std::accumulate(CHUNK_ATTRS.begin(), CHUNK_ATTRS.end(), 0);
+    inline static const int VERTEX_SIZE = std::accumulate(VERTEX_ATTRS.begin(), VERTEX_ATTRS.end(), 0);
 
     std::vector<float> mBuffer;
 
@@ -24,7 +24,11 @@ public:
 
     VoxelsRenderer(uint startCapacity = 1024);
 
-    MeshHeap render(const ChunkHeap& chunks);
+    Mesh render(const ChunkHeap& chunks, int chX, int chY, int chZ);
+
+    MeshHeap render(ChunkHeap& chunks);
+
+    void render(ChunkHeap& chunks, MeshHeap& meshes);
 };
 
 #endif //MINECRAFT_VOXELSRENDERER_H

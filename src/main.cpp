@@ -3,12 +3,22 @@
 #include "window/Window.h"
 #include "graphics/Shader.h"
 #include "graphics/Texture2D.h"
-#include "graphics/Mesh.h"
 #include "graphics/VoxelsRenderer.h"
-#include "voxel/Chunk.h"
+#include "voxel/ChunkHeap.h"
 #include "camera/Camera.h"
 #include "time/Clock.h"
-#include "voxel/ChunkHeap.h"
+
+const float crosshair_vertices[] = {
+        -0.01, -0.01,
+        0.01, 0.01,
+
+        -0.01, 0.01,
+        0.01, -0.01
+};
+
+const int crosshair_attrs[] = {
+        2, 0
+};
 
 int main() {
 
@@ -20,6 +30,15 @@ int main() {
         shader.load("../res/shaders/main.glslv", "../res/shaders/main.glslf");
     } catch (const Shader::ShaderCreationException& exception) {
         std::cerr << "failed to load shader\n";
+        return 1;
+    }
+
+    Shader crosshairShader;
+
+    try {
+        crosshairShader.load("../res/shaders/crosshair.glslv", "../res/shaders/crosshair.glslf");
+    } catch (const Shader::ShaderCreationException& exception) {
+        std::cerr << "failed to load crosshairShader\n";
         return 1;
     }
 
@@ -36,11 +55,9 @@ int main() {
 
     ChunkHeap chunks (8, 2, 8);
 
-    MeshHeap meshHeap = renderer.render(chunks);
+    MeshHeap meshes = renderer.render(chunks);
 
-//    std::vector<Mesh> meshes;
-//    std::for_each(chunks.mChunks.begin(), chunks.mChunks.end(),
-//                  [&](const Chunk& ch) { meshes.push_back(renderer.render(ch)); });
+    Mesh crosshair (crosshair_vertices, 4, crosshair_attrs);
 
     glClearColor(0.6f,0.62f,0.65f,1);
 
@@ -57,7 +74,7 @@ int main() {
 
     float camX = 0, camY = 0;
 
-    double speed = 0.005;
+    double speed = 0.01;
     float sensitivityX = 2, sensitivityY = 2;
 
     while(!window.isShouldClose()) {
@@ -104,30 +121,36 @@ int main() {
             camera.setRotation(glm::mat4(1));
             camera.rotate(glm::vec3(camY, camX, 0));
         }
+        if (window.buttonJustPressed(GLFW_MOUSE_BUTTON_1)
+            || window.buttonJustPressed(GLFW_MOUSE_BUTTON_2)) {
+            glm::vec3 end, norm, iend;
+            Voxel* voxel = chunks.rayCast(camera.getPosition(), camera.getFront(), 10, end, norm, iend);
+            if (voxel != nullptr) {
+                if (window.buttonJustPressed(GLFW_MOUSE_BUTTON_1)) {
+                    chunks.setVoxelGlobal((int)iend.x, (int)iend.y, (int)iend.z, 0);
+                } else if (window.buttonJustPressed(GLFW_MOUSE_BUTTON_2)) {
+                    int x = (int)iend.x + (int)norm.x;
+                    int y = (int)iend.y + (int)norm.y;
+                    int z = (int)iend.z + (int)norm.z;
+                    if (!chunks.voxelNotNull(0, 0, 0, x, y, z))
+                        chunks.setVoxelGlobal((int)iend.x + (int)norm.x, iend.y + (int)norm.y, iend.z + (int)norm.z, 2);
+                }
+            }
+        }
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        renderer.render(chunks, meshes);
+
         shader.use();
-//        shader.setModel(model);
         shader.setProjView(camera.getProjView());
         texture.bind();
-        for (int i = 0; i < meshHeap.size(); ++i) {
-            shader.setModel(meshHeap.getModel(i));
-            meshHeap.getMesh(i).draw();
+        for (int i = 0; i < meshes.size(); ++i) {
+            shader.setModel(meshes.getModel(i));
+            meshes.getMesh(i).draw();
         }
-//        for (int i = 0; i < meshes.size(); ++i) {
-//            model = glm::mat4(1);
-//            model = glm::translate(
-//                    model,
-//                    glm::vec3(
-//                            chunks.mChunks[i].mXPos*Chunk::WIDTH,
-//                            chunks.mChunks[i].mYPos*Chunk::HEIGHT,
-//                            chunks.mChunks[i].mZPos*Chunk::LENGTH
-//                            )
-//                    );
-//            shader.setModel(model);
-//            meshes[i].draw(GL_TRIANGLES);
-//        }
+        crosshairShader.use();
+        crosshair.draw(GL_LINES);
 
         window.swapBuffers();
     }

@@ -14,6 +14,8 @@ public:
     uint getId() const;
 
     void setId(uint id);
+
+    bool operator==(const Voxel& other);
 };
 
 #endif //MINECRAFT_VOXEL_H

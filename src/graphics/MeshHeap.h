@@ -12,12 +12,12 @@ class MeshHeap {
 
 public:
 
-    MeshHeap();
+    MeshHeap(int size);
 
     int size() const;
 
-    void add(Mesh&& mesh, const glm::vec3& offset);
-    void add(Mesh&& mesh, const glm::mat4& model);
+    void set(Mesh&& mesh, const glm::vec3& offset, int index);
+    void set(Mesh&& mesh, const glm::mat4& model, int index);
 
     const Mesh& getMesh(int index) const;
     const glm::mat4& getModel(int index) const;

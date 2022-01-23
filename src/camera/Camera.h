@@ -31,6 +31,11 @@ public:
     void moveRelative(const glm::vec3& vec);
     void rotate(const glm::vec3& vec);
 
+    const glm::vec3& getPosition() const;
+    const glm::vec3& getFront() const;
+    const glm::vec3& getUp() const;
+    const glm::vec3& getRight() const;
+
     const glm::mat4& getRotation() const;
     void setRotation(const glm::mat4& rotation);
 

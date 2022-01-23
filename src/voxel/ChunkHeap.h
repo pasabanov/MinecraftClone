@@ -7,10 +7,13 @@
 
 class ChunkHeap {
 
-public:
-
     uint mWidth, mHeight, mLength;
     std::vector<Chunk> mChunks;
+
+    bool voxelExists0(int chX, int chY, int chZ, int x, int y, int z) const;
+    bool voxelNotNull0(int chX, int chY, int chZ, int x, int y, int z) const;
+
+public:
 
     static void normalizeCoords(int& chX, int& chY, int& chZ, int& x, int& y, int& z);
 
@@ -19,18 +22,32 @@ public:
     uint getWidth() const;
     uint getHeight() const;
     uint getLength() const;
+    uint getVolume() const;
 
-    Chunk& chunk(int x, int y, int z);
-    Chunk& chunk(const glm::vec3& pos);
+    Chunk& getChunk(int x, int y, int z);
+    Chunk& getChunk(const glm::vec3& pos);
     const Chunk& getChunk(int x, int y, int z) const;
     const Chunk& getChunk(const glm::vec3& pos) const;
     void setChunk(int x, int y, int z, Chunk chunk);
     void setChunk(const glm::vec3& pos, Chunk chunk);
 
     bool chunkExists(int chX, int chY, int chZ) const;
+
     bool voxelExists(int chX, int chY, int chZ, int x, int y, int z) const;
-    const Voxel& getVoxel(int chX, int chY, int chZ, int x, int y, int z) const;
     bool voxelNotNull(int chX, int chY, int chZ, int x, int y, int z) const;
+
+    const Voxel& getVoxelGlobal(int x, int y, int z) const;
+    void setVoxelGlobal(int x, int y, int z, const Voxel& newVoxel);
+
+    Voxel* rayCast(
+            const glm::vec3& a,
+            const glm::vec3& dir,
+            float maxDist,
+            glm::vec3& end,
+            glm::vec3& norm,
+            glm::vec3& iend);
+
+    int coordsToIndex(int x, int y, int z) const;
 };
 
 #endif //MINECRAFT_CHUNKHEAP_H
