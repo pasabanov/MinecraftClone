@@ -11,8 +11,21 @@ void Camera::updateVectors() {
 
 
 
-Camera::Camera(const glm::vec3& position, float fieldOfView, float aspect, float zNear, float zFar)
-: mPosition(position), mFieldOfView(fieldOfView), mAspect(aspect), mZNear(zNear), mZFar(zFar), mRotation(1) {
+Camera::Camera(
+        const glm::vec3& position,
+        float fieldOfView,
+        float aspect,
+        float zNear,
+        float zFar,
+        float speed,
+        float sensX,
+        float sensY,
+        float rotX,
+        float rotY)
+: mPosition(position), mFieldOfView(fieldOfView), mAspect(aspect)
+, mZNear(zNear), mZFar(zFar), mRotation(1),
+  mSpeed(speed), mSensX(sensX), mSensY(sensY),
+  mRotX(rotX), mRotY(rotY) {
     updateVectors();
 }
 
@@ -73,6 +86,60 @@ float Camera::getAspect() const {
 
 void Camera::setAspect(float aspect) {
     mAspect = aspect;
+}
+
+
+
+float Camera::getSpeed() const {
+    return mSpeed;
+}
+
+void Camera::setSpeed(float speed) {
+    mSpeed = speed;
+}
+
+
+
+float Camera::getSensX() const {
+    return mSensX;
+}
+
+void Camera::setSensX(float sensX) {
+    mSensX = sensX;
+}
+
+float Camera::getSensY() const {
+    return mSensY;
+}
+
+void Camera::setSensY(float sensY) {
+    mSensY = sensY;
+}
+
+
+
+float Camera::getRotX() const {
+    return mRotX;
+}
+
+void Camera::setRotX(float rotX) {
+    mRotX = rotX;
+}
+
+void Camera::addRotX(float rotX) {
+    mRotX += rotX;
+}
+
+float Camera::getRotY() const {
+    return mRotY;
+}
+
+void Camera::setRotY(float rotY) {
+    mRotY = rotY;
+}
+
+void Camera::addRotY(float rotY) {
+    mRotY += rotY;
 }
 
 

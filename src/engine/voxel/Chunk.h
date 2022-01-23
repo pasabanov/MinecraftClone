@@ -1,7 +1,7 @@
 #ifndef MINECRAFT_CHUNK_H
 #define MINECRAFT_CHUNK_H
 
-#include "../headers/includes.h"
+#include "../../headers/includes.h"
 
 #include "Voxel.h"
 

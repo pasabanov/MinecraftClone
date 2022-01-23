@@ -1,7 +1,7 @@
 #ifndef MINECRAFT_VOXEL_H
 #define MINECRAFT_VOXEL_H
 
-#include "../headers/includes.h"
+#include "../../headers/includes.h"
 
 class Voxel {
 

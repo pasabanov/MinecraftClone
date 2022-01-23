@@ -1,7 +1,9 @@
 #ifndef MINECRAFT_SHADER_H
 #define MINECRAFT_SHADER_H
 
-#include "../headers/includes.h"
+#include "../../headers/includes.h"
+
+#include "../exception/MessageException.h"
 
 class Shader {
 
@@ -13,7 +15,10 @@ class Shader {
 
 public:
 
-    class ShaderCreationException : public std::exception {};
+    class ShaderCreationException : public MessageException {
+    public:
+        ShaderCreationException(const std::string& message) : MessageException(message) {}
+    };
 
     explicit Shader(uint id = GL_NONE);
     Shader(Shader&& other);

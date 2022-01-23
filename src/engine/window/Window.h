@@ -1,19 +1,14 @@
 #ifndef MINECRAFT_WINDOW_H
 #define MINECRAFT_WINDOW_H
 
-#include "../headers/includes.h"
+#include "../../headers/includes.h"
+
+#include "Key.h"
 #include "../exception/MessageException.h"
+#include "../view/View.h"
+#include "../time/Clock.h"
 
 class Window {
-public:
-
-    struct Key {
-        bool pressed;
-        uint frame;
-    };
-
-    inline static const int N_KEYS = 1024;
-    inline static const int N_BUTTONS = 12;
 
     inline static std::map<GLFWwindow*,Window*> sWindows;
 
@@ -21,25 +16,21 @@ public:
     int mWidth, mHeight;
     std::string mTitle;
 
-    std::vector<Key> mKeys; // keyboard
-    std::vector<Key> mButtons; // mouse
-    uint mCurrentFrame = 0;
-    double mDeltaX = 0;
-    double mDeltaY = 0;
-    double mX = 0;
-    double mY = 0;
-    bool mCursorStarted = false;
-    bool mCursorDisabled = false;
+    Events mEvents;
+
+    Clock mClock;
+
+    std::unique_ptr<View> mView;
 
     static void cursorPositionCallback(GLFWwindow* glwindow, double xpos, double ypos);
     static void mouseButtonCallback(GLFWwindow* glwindow, int button, int action, int mode);
     static void keyboardKeyCallback(GLFWwindow* glwindow, int key, int scancode, int action, int mode);
     static void windowSizeCallback(GLFWwindow* glwindow, int width, int height);
 
-    void cursorPositionCallback(double xpos, double ypos);
-    void mouseButtonCallback(int button, int action, int mode);
-    void keyboardKeyCallback(int keycode, int scancode, int action, int mode);
-    void windowSizeCallback(int width, int height);
+    void onCursorPositionChanged(double xpos, double ypos);
+    void onMouseButtonAction(int button, int action, int mode);
+    void onKeyboardKeyAction(int keycode, int scancode, int action, int mode);
+    void onWindowSizeChanged(int width, int height);
 
     void registerWindow() const;
     void unregisterWindow() const;
@@ -51,21 +42,23 @@ public:
     inline static int DEFAULT_WIDTH = 1280;
     inline static int DEFAULT_HEIGHT = 720;
 
-    class WindowCreationError : public MessageException {
+    class WindowCreationException : public MessageException {
     public:
-        WindowCreationError(const std::string& message) : MessageException(message) {}
+        WindowCreationException(const std::string& message) : MessageException(message) {}
     };
 
     Window(const std::string& title, int width = DEFAULT_WIDTH, int height = DEFAULT_HEIGHT);
 
     ~Window();
 
+    std::unique_ptr<View>& getView();
+    const std::unique_ptr<View>& getView() const;
+    void setView(std::unique_ptr<View>&& view);
+
     bool isShouldClose() const;
     void setShouldClose(bool flag);
 
     void pollEvents();
-
-    void swapBuffers();
 
     bool keyPressed(int keycode) const;
     bool keyJustPressed(int keycode) const;
@@ -83,6 +76,10 @@ public:
 
     const std::string& getTitle() const;
     void setTitle(const std::string& title);
+
+    void requestFocus() const;
+
+    void refresh();
 };
 
 #endif //MINECRAFT_WINDOW_H

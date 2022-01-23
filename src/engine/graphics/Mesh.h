@@ -1,7 +1,7 @@
 #ifndef MINECRAFT_MESH_H
 #define MINECRAFT_MESH_H
 
-#include "../headers/includes.h"
+#include "../../headers/includes.h"
 
 class Mesh {
 

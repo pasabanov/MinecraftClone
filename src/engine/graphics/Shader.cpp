@@ -44,6 +44,8 @@ Shader& Shader::operator=(Shader&& other) {
 
 void Shader::load(const std::string& vertexFilename, const std::string& fragmentFilename) {
 
+    glDelete();
+
     std::string strVertexCode;
     std::string strFragmentCode;
     std::ifstream vertexFile;
@@ -69,10 +71,7 @@ void Shader::load(const std::string& vertexFilename, const std::string& fragment
         strFragmentCode = fShaderStream.str();
 
     } catch (const std::ifstream::failure& e) {
-
-        std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ" << std::endl;
-
-        throw ShaderCreationException();
+        throw ShaderCreationException("File not successfully read");
     }
 
     const char* vertexCode = strVertexCode.c_str();
@@ -91,10 +90,10 @@ void Shader::load(const std::string& vertexFilename, const std::string& fragment
     glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
     if (!success) {
         glGetShaderInfoLog(vertex, infoLogBuffSize, nullptr, infoLogBuff);
-        std::cerr << "SHADER::VERTEX: compilation failed\n";
-        std::cerr << infoLogBuff << '\n';
 
-        throw ShaderCreationException();
+        std::string message = "Vertex : compilation failed:\n";
+        message.append(infoLogBuff);
+        throw ShaderCreationException(message);
     }
 
     // Fragment Shader
@@ -105,12 +104,12 @@ void Shader::load(const std::string& vertexFilename, const std::string& fragment
     glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
     if (!success) {
         glGetShaderInfoLog(fragment, infoLogBuffSize, nullptr, infoLogBuff);
-        std::cerr << "SHADER::FRAGMENT: compilation failed\n";
-        std::cerr << infoLogBuff << '\n';
 
         glDeleteShader(vertex);
 
-        throw ShaderCreationException();
+        std::string message = "Fragment : compilation failed:\n";
+        message.append(infoLogBuff);
+        throw ShaderCreationException(message);
     }
 
     mId = glCreateProgram();
@@ -121,8 +120,6 @@ void Shader::load(const std::string& vertexFilename, const std::string& fragment
     glGetProgramiv(mId, GL_LINK_STATUS, &success);
     if (!success) {
         glGetShaderInfoLog(mId, infoLogBuffSize, nullptr, infoLogBuff);
-        std::cerr << "SHADER::PROGRAM: linking failed\n";
-        std::cerr << infoLogBuff << '\n';
 
         glDetachShader(mId, vertex);
         glDetachShader(mId, fragment);
@@ -130,7 +127,9 @@ void Shader::load(const std::string& vertexFilename, const std::string& fragment
         glDeleteShader(fragment);
         glDeleteProgram(mId);
 
-        throw ShaderCreationException();
+        std::string message = "Shader : program linking failed:\n";
+        message.append(infoLogBuff);
+        throw ShaderCreationException(message);
     }
 
     glDetachShader(mId, vertex);
