@@ -34,7 +34,7 @@ class VoxelWorld : public View {
 
 public:
 
-    VoxelWorld(int viewWidth, int viewHeight, int width, int height, int length);
+    VoxelWorld(int width, int height, int worldWidth, int worldHeight, int worldLength);
 
     void onViewSizeChanged(int width, int height) override;
 

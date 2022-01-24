@@ -2,8 +2,8 @@
 
 
 
-VoxelWorld::VoxelWorld(int viewWidth, int viewHeight, int width, int height, int length)
-: View(viewWidth, viewHeight), mRenderer{}, mChunks(width, height, length), mMeshes(mRenderer.render(mChunks)) {
+VoxelWorld::VoxelWorld(int width, int height, int worldWidth, int worldHeight, int worldLength)
+: View(width, height), mRenderer{}, mChunks(worldWidth, worldHeight, worldLength), mMeshes(mRenderer.render(mChunks)) {
 
     mTextureShader.load(
             "../res/shaders/texture_2d_in_3d/texture_2d_in_3d.glslv",
@@ -20,6 +20,8 @@ VoxelWorld::VoxelWorld(int viewWidth, int viewHeight, int width, int height, int
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
+
+
 
 void VoxelWorld::onViewSizeChanged(int width, int height) {
     View::onViewSizeChanged(width, height);
@@ -68,8 +70,8 @@ void VoxelWorld::applyEvents(const Events& events, float elapsedTime) {
     }
 
     if (events.isCursorDisabled()) {
-        mCamera.addRotX(mCamera.getSensX() * -events.getDeltaX() / getViewWidth());
-        mCamera.addRotY(mCamera.getSensY() * -events.getDeltaY() / getViewHeight());
+        mCamera.addRotX(mCamera.getSensX() * -events.getDeltaX() / getWidth());
+        mCamera.addRotY(mCamera.getSensY() * -events.getDeltaY() / getHeight());
         if (mCamera.getRotY() < -glm::radians(89.0f))
             mCamera.setRotY(-glm::radians(89.0f));
         else if (mCamera.getRotY() > glm::radians(89.0f))

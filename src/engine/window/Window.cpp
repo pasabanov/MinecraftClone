@@ -80,6 +80,12 @@ void Window::setCursorMode(int mode) const {
 
 
 
+void Window::swapBuffers() const {
+    glfwSwapBuffers(mWindow);
+}
+
+
+
 Window::Window(const std::string& title, int width, int height)
 : mTitle(title), mWidth(width), mHeight(height) {
 
@@ -227,5 +233,5 @@ void Window::refresh() {
     requestFocus();
     if (mView != nullptr)
         mView->refresh();
-    glfwSwapBuffers(mWindow);
+    swapBuffers();
 }

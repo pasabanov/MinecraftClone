@@ -2,7 +2,7 @@
 
 
 
-View::View(int width, int height) : mViewWidth(width), mViewHeight(height) {}
+View::View(int width, int height) : mWidth(width), mHeight(height) {}
 
 
 
@@ -10,20 +10,20 @@ View::~View() {}
 
 
 
-int View::getViewWidth() const {
-    return mViewWidth;
+int View::getWidth() const {
+    return mWidth;
 }
 
-void View::setViewWidth(int width) {
-    mViewWidth = width;
+void View::setWidth(int width) {
+    mWidth = width;
 }
 
-int View::getViewHeight() const {
-    return mViewHeight;
+int View::getHeight() const {
+    return mHeight;
 }
 
-void View::setViewHeight(int height) {
-    mViewHeight = height;
+void View::setHeight(int height) {
+    mHeight = height;
 }
 
 

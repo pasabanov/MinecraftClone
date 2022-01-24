@@ -37,6 +37,8 @@ class Window {
 
     void setCursorMode(int mode) const;
 
+    void swapBuffers() const;
+
 public:
 
     inline static int DEFAULT_WIDTH = 1280;

@@ -7,7 +7,7 @@
 
 class View {
 
-    int mViewWidth, mViewHeight;
+    int mWidth, mHeight;
 
 public:
 
@@ -15,10 +15,10 @@ public:
 
     virtual ~View();
 
-    virtual int getViewWidth() const;
-    virtual void setViewWidth(int width);
-    virtual int getViewHeight() const;
-    virtual void setViewHeight(int height);
+    virtual int getWidth() const;
+    virtual void setWidth(int width);
+    virtual int getHeight() const;
+    virtual void setHeight(int height);
 
     virtual void onCursorPositionChanged(double xpos, double ypos, double deltaX, double deltaY) {
     }

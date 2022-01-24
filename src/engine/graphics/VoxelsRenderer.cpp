@@ -45,7 +45,7 @@ Mesh VoxelsRenderer::render(const ChunkHeap& chunks, int chX, int chY, int chZ) 
                 if (!voxel.getId())
                     continue;
 
-                float light;
+                float light = 1;
                 float uvsize = 1.0/16.0;
                 float u = id % 16 * uvsize;
                 float v = 1 - ((1 + id / 16) * uvsize);
@@ -56,7 +56,6 @@ Mesh VoxelsRenderer::render(const ChunkHeap& chunks, int chX, int chY, int chZ) 
                 float aoFactor = 0.15;
 
                 if (!chunks.voxelNotNull(chX, chY, chZ, x, y + 1, z)) {
-                    light = 1;
 
                     if (mAmbientOcclusion) {
                         a = chunks.voxelNotNull(chX, chY, chZ, x+1,y+1,z)*aoFactor;
@@ -79,7 +78,6 @@ Mesh VoxelsRenderer::render(const ChunkHeap& chunks, int chX, int chY, int chZ) 
                     writeVertex(x + 1, y + 1, z, u, v, light*(1-a-d-h));
                 }
                 if (!chunks.voxelNotNull(chX, chY, chZ, x, y - 1, z)) {
-                    light = 0.75;
 
                     if (mAmbientOcclusion) {
                         a = chunks.voxelNotNull(chX, chY, chZ, x+1,y-1,z)*aoFactor;
@@ -103,7 +101,6 @@ Mesh VoxelsRenderer::render(const ChunkHeap& chunks, int chX, int chY, int chZ) 
                 }
 
                 if (!chunks.voxelNotNull(chX, chY, chZ, x + 1, y, z)) {
-                    light = 0.95;
 
                     if (mAmbientOcclusion) {
                         a = chunks.voxelNotNull(chX, chY, chZ, x+1,y+1,z)*aoFactor;
@@ -126,7 +123,6 @@ Mesh VoxelsRenderer::render(const ChunkHeap& chunks, int chX, int chY, int chZ) 
                     writeVertex(x + 1, y, z + 1, u, v, light*(1-b-c-f));
                 }
                 if (!chunks.voxelNotNull(chX, chY, chZ, x - 1, y, z)) {
-                    light = 0.85;
 
                     if (mAmbientOcclusion){
                         a = chunks.voxelNotNull(chX, chY, chZ, x-1,y+1,z)*aoFactor;
@@ -150,7 +146,6 @@ Mesh VoxelsRenderer::render(const ChunkHeap& chunks, int chX, int chY, int chZ) 
                 }
 
                 if (!chunks.voxelNotNull(chX, chY, chZ, x, y, z + 1)) {
-                    light = 0.9;
 
                     if (mAmbientOcclusion){
                         a = chunks.voxelNotNull(chX, chY, chZ, x,  y+1,z+1)*aoFactor;
@@ -173,7 +168,6 @@ Mesh VoxelsRenderer::render(const ChunkHeap& chunks, int chX, int chY, int chZ) 
                     writeVertex(x + 1, y + 1, z + 1, u+uvsize, v+uvsize, light*(1-a-b-g));
                 }
                 if (!chunks.voxelNotNull(chX, chY, chZ, x, y, z - 1)) {
-                    light = 0.8;
 
                     if (mAmbientOcclusion){
                         a = chunks.voxelNotNull(chX, chY, chZ, x,  y+1,z-1)*aoFactor;
