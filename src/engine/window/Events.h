@@ -7,6 +7,9 @@
 
 class Events {
 
+    inline static const int N_KEYS = 1024;
+    inline static const int N_BUTTONS = 12;
+
     std::vector<Key> mKeys { N_KEYS }; // keyboard
     std::vector<Key> mButtons { N_BUTTONS }; // mouse
     uint mCurrentFrame = 0;
@@ -18,9 +21,6 @@ class Events {
     bool mCursorDisabled = false;
 
 public:
-
-    inline static const int N_KEYS = 1024;
-    inline static const int N_BUTTONS = 12;
 
     Events();
 
