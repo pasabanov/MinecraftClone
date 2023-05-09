@@ -18,8 +18,7 @@ int main() {
             )
     );
 
-    glClearColor(0.6f,0.62f,0.65f,1);
-
+    window.fillColor(0.6, 0.62, 0.65);
 
     while(!window.isShouldClose()) {
 
@@ -27,6 +26,12 @@ int main() {
 
         if (window.keyJustPressed(GLFW_KEY_ESCAPE)) {
             window.setShouldClose(true);
+        }
+        if (window.keyJustPressed(GLFW_KEY_F2)) {
+            ((const VoxelWorld&) *window.getView()).save("world.bin");
+        }
+        if (window.keyJustPressed(GLFW_KEY_F3)) {
+            ((VoxelWorld&) *window.getView()).load("world.bin");
         }
         if (window.keyJustPressed(GLFW_KEY_TAB)) {
             window.toggleCursor();

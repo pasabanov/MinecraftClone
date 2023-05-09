@@ -8,7 +8,7 @@ bool Chunk::voxelExists(int x, int y, int z) {
 
 
 
-Chunk::Chunk(const VoxelGenerator& generator) : mVoxels(VOLUME) {
+Chunk::Chunk(int x, int y, int z, const VoxelGenerator& generator) : mX(x), mY(y), mZ(z), mVoxels(VOLUME) {
     generateVoxels(generator);
 }
 
@@ -25,36 +25,59 @@ void Chunk::generateVoxels(const VoxelGenerator& generator) {
 
 
 
+int Chunk::getX() const {
+    return mX;
+}
+
+int Chunk::getY() const {
+    return mY;
+}
+
+int Chunk::getZ() const {
+    return mZ;
+}
+
+void Chunk::setX(int x) {
+    mX = x;
+}
+
+void Chunk::setY(int y) {
+    mY = y;
+}
+
+void Chunk::setZ(int z) {
+    mZ = z;
+}
+
+
+
 Voxel& Chunk::getVoxel(uint x, uint y, uint z) {
     return mVoxels[(y * LENGTH + z) * WIDTH + x];
 }
 
-Voxel& Chunk::getVoxel(const glm::vec3& pos) {
-    return getVoxel(pos.x, pos.y, pos.z);
-}
-
-
-
 const Voxel& Chunk::getVoxel(uint x, uint y, uint z) const {
     return mVoxels[(y * LENGTH + z) * WIDTH + x];
 }
-
-const Voxel& Chunk::getVoxel(const glm::vec3& pos) const {
-    return getVoxel(pos.x, pos.y, pos.z);
-}
-
-
 
 void Chunk::setVoxel(uint x, uint y, uint z, const Voxel& voxel) {
     mVoxels[(y * LENGTH + z) * WIDTH + x] = voxel;
     setModified(true);
 }
 
-void Chunk::setVoxel(const glm::vec3& pos, const Voxel& voxel) {
-    setVoxel(pos.x, pos.y, pos.z, voxel);
-    setModified(true);
+
+
+ubyte Chunk::getLight(int x, int y, int z, int channel) const {
+    if (voxelExists(x, y, z))
+        return mLightMap.get(x, y, z, channel);
+    return 0;
 }
 
+void Chunk::setLight(int x, int y, int z, int channel, int value) {
+    if (voxelExists(x, y, z)) {
+        mLightMap.set(x, y, z, channel, value);
+        setModified(true);
+    }
+}
 
 
 bool Chunk::isModified() const {
@@ -63,4 +86,18 @@ bool Chunk::isModified() const {
 
 void Chunk::setModified(bool modified) {
     mModified = modified;
+}
+
+
+
+Voxel& Chunk::getVoxel(int index) {
+    return mVoxels[index];
+}
+
+const Voxel& Chunk::getVoxel(int index) const {
+    return mVoxels[index];
+}
+
+void Chunk::setVoxel(int index, const Voxel& voxel) {
+    mVoxels[index] = voxel;
 }

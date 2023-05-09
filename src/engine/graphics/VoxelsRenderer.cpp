@@ -2,29 +2,24 @@
 
 
 
-void VoxelsRenderer::writeVertex(float x, float y, float z, float u, float v, float l) {
+void VoxelsRenderer::writeVertex(float x, float y, float z, float u, float v, float r, float g, float b, float s) {
+
     mBuffer.push_back(x);
     mBuffer.push_back(y);
     mBuffer.push_back(z);
+
     mBuffer.push_back(u);
     mBuffer.push_back(v);
-    mBuffer.push_back(l);
+
+    mBuffer.push_back(r);
+    mBuffer.push_back(g);
+    mBuffer.push_back(b);
+    mBuffer.push_back(s);
 }
 
 
 
-VoxelsRenderer::VoxelsRenderer(uint startCapacity, bool ambientOcclusion)
-: mBuffer(startCapacity), mAmbientOcclusion(ambientOcclusion) {}
-
-
-
-bool VoxelsRenderer::getAmbientOcclusion() const {
-    return mAmbientOcclusion;
-}
-
-void VoxelsRenderer::setAmbientOcclusion(bool ambientOcclusion) {
-    mAmbientOcclusion = ambientOcclusion;
-}
+VoxelsRenderer::VoxelsRenderer(uint startCapacity) : mBuffer(startCapacity) {}
 
 
 
@@ -38,7 +33,7 @@ Mesh VoxelsRenderer::render(const ChunkHeap& chunks, int chX, int chY, int chZ) 
         for (int z = 0; z < Chunk::LENGTH; ++z) {
             for (int x = 0; x < Chunk::WIDTH; ++x) {
 
-                Voxel voxel = chunk.getVoxel(x, y, z);
+                const Voxel& voxel = chunk.getVoxel(x, y, z);
 
                 const int id = voxel.getId();
 
@@ -47,147 +42,232 @@ Mesh VoxelsRenderer::render(const ChunkHeap& chunks, int chX, int chY, int chZ) 
 
                 float light = 1;
                 float uvsize = 1.0/16.0;
-                float u = id % 16 * uvsize;
-                float v = 1 - ((1 + id / 16) * uvsize);
+                float u1 = id % 16 * uvsize;
+                float v1 = 1 - ((1 + id / 16) * uvsize);
+                float u2 = u1 + uvsize;
+                float v2 = v1 + uvsize;
 
-                // AO values
-                float a, b, c, d, e, f, g, h;
-                a = b = c = d = e = f = g = h = 0.0;
-                float aoFactor = 0.15;
+//                // AO values
+//                float a, b, c, d, e, f, g, h;
+//                a = b = c = d = e = f = g = h = 0.0;
+//                float aoFactor = 0.15;
 
-                if (!chunks.voxelNotNull(chX, chY, chZ, x, y + 1, z)) {
+                float l = 1;
 
-                    if (mAmbientOcclusion) {
-                        a = chunks.voxelNotNull(chX, chY, chZ, x+1,y+1,z)*aoFactor;
-                        b = chunks.voxelNotNull(chX, chY, chZ, x,y+1,z+1)*aoFactor;
-                        c = chunks.voxelNotNull(chX, chY, chZ, x-1,y+1,z)*aoFactor;
-                        d = chunks.voxelNotNull(chX, chY, chZ, x,y+1,z-1)*aoFactor;
+                if (!chunks.voxelNotNull(chX, chY, chZ, x, y+1, z)) {
 
-                        e = chunks.voxelNotNull(chX, chY, chZ, x-1,y+1,z-1)*aoFactor;
-                        f = chunks.voxelNotNull(chX, chY, chZ, x-1,y+1,z+1)*aoFactor;
-                        g = chunks.voxelNotNull(chX, chY, chZ, x+1,y+1,z+1)*aoFactor;
-                        h = chunks.voxelNotNull(chX, chY, chZ, x+1,y+1,z-1)*aoFactor;
-                    }
+                    float lr = chunks.getLight(chX, chY, chZ, x, y+1, z, 0) / 15.0;
+                    float lg = chunks.getLight(chX, chY, chZ, x, y+1, z, 1) / 15.0;
+                    float lb = chunks.getLight(chX, chY, chZ, x, y+1, z, 2) / 15.0;
+                    float ls = chunks.getLight(chX, chY, chZ, x, y+1, z, 3) / 15.0;
 
-                    writeVertex(x, y + 1, z, u+uvsize, v, light*(1-c-d-e));
-                    writeVertex(x, y + 1, z + 1, u+uvsize, v+uvsize, light*(1-c-b-f));
-                    writeVertex(x + 1, y + 1, z + 1, u, v+uvsize, light*(1-a-b-g));
+                    float lr0 = (chunks.getLight(chX, chY, chZ, x-1, y+1, z, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x-1, y+1, z-1, 0) + chunks.getLight(chX, chY, chZ, x, y+1, z-1, 0)) / 5.0 / 15.0;
+                    float lr1 = (chunks.getLight(chX, chY, chZ, x-1, y+1, z, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x-1, y+1, z+1, 0) + chunks.getLight(chX, chY, chZ, x, y+1, z+1, 0)) / 5.0 / 15.0;
+                    float lr2 = (chunks.getLight(chX, chY, chZ, x+1, y+1, z, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x+1, y+1, z+1, 0) + chunks.getLight(chX, chY, chZ, x, y+1, z+1, 0)) / 5.0 / 15.0;
+                    float lr3 = (chunks.getLight(chX, chY, chZ, x+1, y+1, z, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x+1, y+1, z-1, 0) + chunks.getLight(chX, chY, chZ, x, y+1, z-1, 0)) / 5.0 / 15.0;
 
-                    writeVertex(x, y + 1, z, u+uvsize, v, light*(1-c-d-e));
-                    writeVertex(x + 1, y + 1, z + 1, u, v+uvsize, light*(1-a-b-g));
-                    writeVertex(x + 1, y + 1, z, u, v, light*(1-a-d-h));
-                }
-                if (!chunks.voxelNotNull(chX, chY, chZ, x, y - 1, z)) {
+                    float lg0 = (chunks.getLight(chX, chY, chZ, x-1, y+1, z, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x-1, y+1, z-1, 1) + chunks.getLight(chX, chY, chZ, x, y+1, z-1, 1)) / 5.0 / 15.0;
+                    float lg1 = (chunks.getLight(chX, chY, chZ, x-1, y+1, z, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x-1, y+1, z+1, 1) + chunks.getLight(chX, chY, chZ, x, y+1, z+1, 1)) / 5.0 / 15.0;
+                    float lg2 = (chunks.getLight(chX, chY, chZ, x+1, y+1, z, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x+1, y+1, z+1, 1) + chunks.getLight(chX, chY, chZ, x, y+1, z+1, 1)) / 5.0 / 15.0;
+                    float lg3 = (chunks.getLight(chX, chY, chZ, x+1, y+1, z, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x+1, y+1, z-1, 1) + chunks.getLight(chX, chY, chZ, x, y+1, z-1, 1)) / 5.0 / 15.0;
 
-                    if (mAmbientOcclusion) {
-                        a = chunks.voxelNotNull(chX, chY, chZ, x+1,y-1,z)*aoFactor;
-                        b = chunks.voxelNotNull(chX, chY, chZ, x,y-1,z+1)*aoFactor;
-                        c = chunks.voxelNotNull(chX, chY, chZ, x-1,y-1,z)*aoFactor;
-                        d = chunks.voxelNotNull(chX, chY, chZ, x,y-1,z-1)*aoFactor;
+                    float lb0 = (chunks.getLight(chX, chY, chZ, x-1, y+1, z, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x-1, y+1, z-1, 2) + chunks.getLight(chX, chY, chZ, x, y+1, z-1, 2)) / 5.0 / 15.0;
+                    float lb1 = (chunks.getLight(chX, chY, chZ, x-1, y+1, z, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x-1, y+1, z+1, 2) + chunks.getLight(chX, chY, chZ, x, y+1, z+1, 2)) / 5.0 / 15.0;
+                    float lb2 = (chunks.getLight(chX, chY, chZ, x+1, y+1, z, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x+1, y+1, z+1, 2) + chunks.getLight(chX, chY, chZ, x, y+1, z+1, 2)) / 5.0 / 15.0;
+                    float lb3 = (chunks.getLight(chX, chY, chZ, x+1, y+1, z, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x+1, y+1, z-1, 2) + chunks.getLight(chX, chY, chZ, x, y+1, z-1, 2)) / 5.0 / 15.0;
 
-                        e = chunks.voxelNotNull(chX, chY, chZ, x-1,y-1,z-1)*aoFactor;
-                        f = chunks.voxelNotNull(chX, chY, chZ, x-1,y-1,z+1)*aoFactor;
-                        g = chunks.voxelNotNull(chX, chY, chZ, x+1,y-1,z+1)*aoFactor;
-                        h = chunks.voxelNotNull(chX, chY, chZ, x+1,y-1,z-1)*aoFactor;
-                    }
+                    float ls0 = (chunks.getLight(chX, chY, chZ, x-1, y+1, z, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x-1, y+1, z-1, 3) + chunks.getLight(chX, chY, chZ, x, y+1, z-1, 3)) / 5.0 / 15.0;
+                    float ls1 = (chunks.getLight(chX, chY, chZ, x-1, y+1, z, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x-1, y+1, z+1, 3) + chunks.getLight(chX, chY, chZ, x, y+1, z+1, 3)) / 5.0 / 15.0;
+                    float ls2 = (chunks.getLight(chX, chY, chZ, x+1, y+1, z, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x+1, y+1, z+1, 3) + chunks.getLight(chX, chY, chZ, x, y+1, z+1, 3)) / 5.0 / 15.0;
+                    float ls3 = (chunks.getLight(chX, chY, chZ, x+1, y+1, z, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x+1, y+1, z-1, 3) + chunks.getLight(chX, chY, chZ, x, y+1, z-1, 3)) / 5.0 / 15.0;
 
-                    writeVertex(x, y, z, u, v, light*(1-c-d-e));
-                    writeVertex(x + 1, y, z + 1, u+uvsize, v+uvsize, light*(1-a-b-g));
-                    writeVertex(x, y, z + 1, u, v+uvsize, light*(1-c-b-f));
+                    writeVertex(x, y + 1, z, u2, v1, lr0, lg0, lb0, ls0);
+                    writeVertex(x, y + 1, z + 1, u2, v2, lr1, lg1, lb1, ls1);
+                    writeVertex(x + 1, y + 1, z + 1, u1, v2, lr2, lg2, lb2, ls2);
 
-                    writeVertex(x, y, z, u, v, light*(1-c-d-e));
-                    writeVertex(x + 1, y, z, u+uvsize, v, light*(1-a-d-h));
-                    writeVertex(x + 1, y, z + 1, u+uvsize, v+uvsize, light*(1-a-b-g));
+                    writeVertex(x, y + 1, z, u2, v1, lr0, lg0, lb0, ls0);
+                    writeVertex(x + 1, y + 1, z + 1, u1, v2, lr2, lg2, lb2, ls2);
+                    writeVertex(x + 1, y + 1, z, u1, v1, lr3, lg3, lb3, ls3);
                 }
 
-                if (!chunks.voxelNotNull(chX, chY, chZ, x + 1, y, z)) {
+                if (!chunks.voxelNotNull(chX, chY, chZ, x, y-1, z)) {
 
-                    if (mAmbientOcclusion) {
-                        a = chunks.voxelNotNull(chX, chY, chZ, x+1,y+1,z)*aoFactor;
-                        b = chunks.voxelNotNull(chX, chY, chZ, x+1,y,  z+1)*aoFactor;
-                        c = chunks.voxelNotNull(chX, chY, chZ, x+1,y-1,z)*aoFactor;
-                        d = chunks.voxelNotNull(chX, chY, chZ, x+1,y,  z-1)*aoFactor;
+                    float lr = chunks.getLight(chX, chY, chZ, x, y-1, z, 0) / 15.0;
+                    float lg = chunks.getLight(chX, chY, chZ, x, y-1, z, 1) / 15.0;
+                    float lb = chunks.getLight(chX, chY, chZ, x, y-1, z, 2) / 15.0;
+                    float ls = chunks.getLight(chX, chY, chZ, x, y-1, z, 3) / 15.0;
 
-                        e = chunks.voxelNotNull(chX, chY, chZ, x+1,y-1,z-1)*aoFactor;
-                        f = chunks.voxelNotNull(chX, chY, chZ, x+1,y-1,z+1)*aoFactor;
-                        g = chunks.voxelNotNull(chX, chY, chZ, x+1,y+1,z+1)*aoFactor;
-                        h = chunks.voxelNotNull(chX, chY, chZ, x+1,y+1,z-1)*aoFactor;
-                    }
+                    float lr0 = (chunks.getLight(chX, chY, chZ, x-1, y-1, z-1, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x-1, y-1, z, 0) + chunks.getLight(chX, chY, chZ, x, y-1, z-1, 0)) / 5.0 / 15.0;
+                    float lr1 = (chunks.getLight(chX, chY, chZ, x+1, y-1, z+1, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x+1, y-1, z, 0) + chunks.getLight(chX, chY, chZ, x, y-1, z+1, 0)) / 5.0 / 15.0;
+                    float lr2 = (chunks.getLight(chX, chY, chZ, x-1, y-1, z+1, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x-1, y-1, z, 0) + chunks.getLight(chX, chY, chZ, x, y-1, z+1, 0)) / 5.0 / 15.0;
+                    float lr3 = (chunks.getLight(chX, chY, chZ, x+1, y-1, z-1, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x+1, y-1, z, 0) + chunks.getLight(chX, chY, chZ, x, y-1, z-1, 0)) / 5.0 / 15.0;
 
-                    writeVertex(x + 1, y, z, u+uvsize, v, light*(1-c-d-e));
-                    writeVertex(x + 1, y + 1, z, u+uvsize, v+uvsize, light*(1-d-a-h));
-                    writeVertex(x + 1, y + 1, z + 1, u, v+uvsize, light*(1-a-b-g));
+                    float lg0 = (chunks.getLight(chX, chY, chZ, x-1, y-1, z-1, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x-1, y-1, z, 1) + chunks.getLight(chX, chY, chZ, x, y-1, z-1, 1)) / 5.0 / 15.0;
+                    float lg1 = (chunks.getLight(chX, chY, chZ, x+1, y-1, z+1, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x+1, y-1, z, 1) + chunks.getLight(chX, chY, chZ, x, y-1, z+1, 1)) / 5.0 / 15.0;
+                    float lg2 = (chunks.getLight(chX, chY, chZ, x-1, y-1, z+1, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x-1, y-1, z, 1) + chunks.getLight(chX, chY, chZ, x, y-1, z+1, 1)) / 5.0 / 15.0;
+                    float lg3 = (chunks.getLight(chX, chY, chZ, x+1, y-1, z-1, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x+1, y-1, z, 1) + chunks.getLight(chX, chY, chZ, x, y-1, z-1, 1)) / 5.0 / 15.0;
 
-                    writeVertex(x + 1, y, z, u+uvsize, v, light*(1-c-d-e));
-                    writeVertex(x + 1, y + 1, z + 1, u, v+uvsize, light*(1-a-b-g));
-                    writeVertex(x + 1, y, z + 1, u, v, light*(1-b-c-f));
-                }
-                if (!chunks.voxelNotNull(chX, chY, chZ, x - 1, y, z)) {
+                    float lb0 = (chunks.getLight(chX, chY, chZ, x-1, y-1, z-1, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x-1, y-1, z, 2) + chunks.getLight(chX, chY, chZ, x, y-1, z-1, 2)) / 5.0 / 15.0;
+                    float lb1 = (chunks.getLight(chX, chY, chZ, x+1, y-1, z+1, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x+1, y-1, z, 2) + chunks.getLight(chX, chY, chZ, x, y-1, z+1, 2)) / 5.0 / 15.0;
+                    float lb2 = (chunks.getLight(chX, chY, chZ, x-1, y-1, z+1, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x-1, y-1, z, 2) + chunks.getLight(chX, chY, chZ, x, y-1, z+1, 2)) / 5.0 / 15.0;
+                    float lb3 = (chunks.getLight(chX, chY, chZ, x+1, y-1, z-1, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x+1, y-1, z, 2) + chunks.getLight(chX, chY, chZ, x, y-1, z-1, 2)) / 5.0 / 15.0;
 
-                    if (mAmbientOcclusion){
-                        a = chunks.voxelNotNull(chX, chY, chZ, x-1,y+1,z)*aoFactor;
-                        b = chunks.voxelNotNull(chX, chY, chZ, x-1,y,  z+1)*aoFactor;
-                        c = chunks.voxelNotNull(chX, chY, chZ, x-1,y-1,z)*aoFactor;
-                        d = chunks.voxelNotNull(chX, chY, chZ, x-1,y,  z-1)*aoFactor;
+                    float ls0 = (chunks.getLight(chX, chY, chZ, x-1, y-1, z-1, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x-1, y-1, z, 3) + chunks.getLight(chX, chY, chZ, x, y-1, z-1, 3)) / 5.0 / 15.0;
+                    float ls1 = (chunks.getLight(chX, chY, chZ, x+1, y-1, z+1, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x+1, y-1, z, 3) + chunks.getLight(chX, chY, chZ, x, y-1, z+1, 3)) / 5.0 / 15.0;
+                    float ls2 = (chunks.getLight(chX, chY, chZ, x-1, y-1, z+1, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x-1, y-1, z, 3) + chunks.getLight(chX, chY, chZ, x, y-1, z+1, 3)) / 5.0 / 15.0;
+                    float ls3 = (chunks.getLight(chX, chY, chZ, x+1, y-1, z-1, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x+1, y-1, z, 3) + chunks.getLight(chX, chY, chZ, x, y-1, z-1, 3)) / 5.0 / 15.0;
 
-                        e = chunks.voxelNotNull(chX, chY, chZ, x-1,y-1,z-1)*aoFactor;
-                        f = chunks.voxelNotNull(chX, chY, chZ, x-1,y-1,z+1)*aoFactor;
-                        g = chunks.voxelNotNull(chX, chY, chZ, x-1,y+1,z+1)*aoFactor;
-                        h = chunks.voxelNotNull(chX, chY, chZ, x-1,y+1,z-1)*aoFactor;
-                    }
+                    writeVertex(x, y, z, u1, v1, lr0, lg0, lb0, ls0);
+                    writeVertex(x + 1, y, z + 1, u2, v2, lr1, lg1, lb1, ls1);
+                    writeVertex(x, y, z + 1, u1, v2, lr2, lg2, lb2, ls2);
 
-                    writeVertex(x, y, z, u, v, light*(1-c-d-e));
-                    writeVertex(x, y + 1, z + 1, u+uvsize, v+uvsize, light*(1-a-b-g));
-                    writeVertex(x, y + 1, z, u, v+uvsize, light*(1-d-a-h));
-
-                    writeVertex(x, y, z, u, v, light*(1-c-d-e));
-                    writeVertex(x, y, z + 1, u+uvsize, v, light*(1-b-c-f));
-                    writeVertex(x, y + 1, z + 1, u+uvsize, v+uvsize, light*(1-a-b-g));
+                    writeVertex(x, y, z, u1, v1, lr0, lg0, lb0, ls0);
+                    writeVertex(x + 1, y, z, u2, v1, lr3, lg3, lb3, ls3);
+                    writeVertex(x + 1, y, z + 1, u2, v2, lr1, lg1, lb1, ls1);
                 }
 
-                if (!chunks.voxelNotNull(chX, chY, chZ, x, y, z + 1)) {
+                if (!chunks.voxelNotNull(chX, chY, chZ, x+1, y, z)) {
 
-                    if (mAmbientOcclusion){
-                        a = chunks.voxelNotNull(chX, chY, chZ, x,  y+1,z+1)*aoFactor;
-                        b = chunks.voxelNotNull(chX, chY, chZ, x+1,y,  z+1)*aoFactor;
-                        c = chunks.voxelNotNull(chX, chY, chZ, x,  y-1,z+1)*aoFactor;
-                        d = chunks.voxelNotNull(chX, chY, chZ, x-1,y,  z+1)*aoFactor;
+                    float lr = chunks.getLight(chX, chY, chZ, x+1, y, z, 0) / 15.0;
+                    float lg = chunks.getLight(chX, chY, chZ, x+1, y, z, 1) / 15.0;
+                    float lb = chunks.getLight(chX, chY, chZ, x+1, y, z, 2) / 15.0;
+                    float ls = chunks.getLight(chX, chY, chZ, x+1, y, z, 3) / 15.0;
 
-                        e = chunks.voxelNotNull(chX, chY, chZ, x-1,y-1,z+1)*aoFactor;
-                        f = chunks.voxelNotNull(chX, chY, chZ, x+1,y-1,z+1)*aoFactor;
-                        g = chunks.voxelNotNull(chX, chY, chZ, x+1,y+1,z+1)*aoFactor;
-                        h = chunks.voxelNotNull(chX, chY, chZ, x-1,y+1,z+1)*aoFactor;
-                    }
+                    float lr0 = (chunks.getLight(chX, chY, chZ, x+1, y-1, z-1, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x+1, y, z-1, 0) + chunks.getLight(chX, chY, chZ, x+1, y-1, z, 0)) / 5.0 / 15.0;
+                    float lr1 = (chunks.getLight(chX, chY, chZ, x+1, y+1, z-1, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x+1, y, z-1, 0) + chunks.getLight(chX, chY, chZ, x+1, y+1, z, 0)) / 5.0 / 15.0;
+                    float lr2 = (chunks.getLight(chX, chY, chZ, x+1, y+1, z+1, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x+1, y, z+1, 0) + chunks.getLight(chX, chY, chZ, x+1, y+1, z, 0)) / 5.0 / 15.0;
+                    float lr3 = (chunks.getLight(chX, chY, chZ, x+1, y-1, z+1, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x+1, y, z+1, 0) + chunks.getLight(chX, chY, chZ, x+1, y-1, z, 0)) / 5.0 / 15.0;
 
-                    writeVertex(x, y, z + 1, u, v, light*(1-c-d-e));
-                    writeVertex(x + 1, y + 1, z + 1, u+uvsize, v+uvsize, light*(1-a-b-g));
-                    writeVertex(x, y + 1, z + 1, u, v+uvsize, light*(1-a-d-h));
+                    float lg0 = (chunks.getLight(chX, chY, chZ, x+1, y-1, z-1, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x+1, y, z-1, 1) + chunks.getLight(chX, chY, chZ, x+1, y-1, z, 1)) / 5.0 / 15.0;
+                    float lg1 = (chunks.getLight(chX, chY, chZ, x+1, y+1, z-1, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x+1, y, z-1, 1) + chunks.getLight(chX, chY, chZ, x+1, y+1, z, 1)) / 5.0 / 15.0;
+                    float lg2 = (chunks.getLight(chX, chY, chZ, x+1, y+1, z+1, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x+1, y, z+1, 1) + chunks.getLight(chX, chY, chZ, x+1, y+1, z, 1)) / 5.0 / 15.0;
+                    float lg3 = (chunks.getLight(chX, chY, chZ, x+1, y-1, z+1, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x+1, y, z+1, 1) + chunks.getLight(chX, chY, chZ, x+1, y-1, z, 1)) / 5.0 / 15.0;
 
-                    writeVertex(x, y, z + 1, u, v, light*(1-c-d-e));
-                    writeVertex(x + 1, y, z + 1, u+uvsize, v, light*(1-b-c-f));
-                    writeVertex(x + 1, y + 1, z + 1, u+uvsize, v+uvsize, light*(1-a-b-g));
+                    float lb0 = (chunks.getLight(chX, chY, chZ, x+1, y-1, z-1, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x+1, y, z-1, 2) + chunks.getLight(chX, chY, chZ, x+1, y-1, z, 2)) / 5.0 / 15.0;
+                    float lb1 = (chunks.getLight(chX, chY, chZ, x+1, y+1, z-1, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x+1, y, z-1, 2) + chunks.getLight(chX, chY, chZ, x+1, y+1, z, 2)) / 5.0 / 15.0;
+                    float lb2 = (chunks.getLight(chX, chY, chZ, x+1, y+1, z+1, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x+1, y, z+1, 2) + chunks.getLight(chX, chY, chZ, x+1, y+1, z, 2)) / 5.0 / 15.0;
+                    float lb3 = (chunks.getLight(chX, chY, chZ, x+1, y-1, z+1, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x+1, y, z+1, 2) + chunks.getLight(chX, chY, chZ, x+1, y-1, z, 2)) / 5.0 / 15.0;
+
+                    float ls0 = (chunks.getLight(chX, chY, chZ, x+1, y-1, z-1, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x+1, y, z-1, 3) + chunks.getLight(chX, chY, chZ, x+1, y-1, z, 3)) / 5.0 / 15.0;
+                    float ls1 = (chunks.getLight(chX, chY, chZ, x+1, y+1, z-1, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x+1, y, z-1, 3) + chunks.getLight(chX, chY, chZ, x+1, y+1, z, 3)) / 5.0 / 15.0;
+                    float ls2 = (chunks.getLight(chX, chY, chZ, x+1, y+1, z+1, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x+1, y, z+1, 3) + chunks.getLight(chX, chY, chZ, x+1, y+1, z, 3)) / 5.0 / 15.0;
+                    float ls3 = (chunks.getLight(chX, chY, chZ, x+1, y-1, z+1, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x+1, y, z+1, 3) + chunks.getLight(chX, chY, chZ, x+1, y-1, z, 3)) / 5.0 / 15.0;
+
+                    writeVertex(x + 1, y, z, u2, v1, lr0, lg0, lb0, ls0);
+                    writeVertex(x + 1, y + 1, z, u2, v2, lr1, lg1, lb1, ls1);
+                    writeVertex(x + 1, y + 1, z + 1, u1, v2, lr2, lg2, lb2, ls2);
+
+                    writeVertex(x + 1, y, z, u2, v1, lr0, lg0, lb0, ls0);
+                    writeVertex(x + 1, y + 1, z + 1, u1, v2, lr2, lg2, lb2, ls2);
+                    writeVertex(x + 1, y, z + 1, u1, v1, lr3, lg3, lb3, ls3);
                 }
-                if (!chunks.voxelNotNull(chX, chY, chZ, x, y, z - 1)) {
 
-                    if (mAmbientOcclusion){
-                        a = chunks.voxelNotNull(chX, chY, chZ, x,  y+1,z-1)*aoFactor;
-                        b = chunks.voxelNotNull(chX, chY, chZ, x+1,y,  z-1)*aoFactor;
-                        c = chunks.voxelNotNull(chX, chY, chZ, x,  y-1,z-1)*aoFactor;
-                        d = chunks.voxelNotNull(chX, chY, chZ, x-1,y,  z-1)*aoFactor;
+                if (!chunks.voxelNotNull(chX, chY, chZ, x-1, y, z)) {
 
-                        e = chunks.voxelNotNull(chX, chY, chZ, x-1,y-1,z-1)*aoFactor;
-                        f = chunks.voxelNotNull(chX, chY, chZ, x+1,y-1,z-1)*aoFactor;
-                        g = chunks.voxelNotNull(chX, chY, chZ, x+1,y+1,z-1)*aoFactor;
-                        h = chunks.voxelNotNull(chX, chY, chZ, x-1,y+1,z-1)*aoFactor;
-                    }
+                    float lr = chunks.getLight(chX, chY, chZ, x-1, y, z, 0) / 15.0;
+                    float lg = chunks.getLight(chX, chY, chZ, x-1, y, z, 1) / 15.0;
+                    float lb = chunks.getLight(chX, chY, chZ, x-1, y, z, 2) / 15.0;
+                    float ls = chunks.getLight(chX, chY, chZ, x-1, y, z, 3) / 15.0;
 
-                    writeVertex(x, y, z, u+uvsize, v, light*(1-c-d-e));
-                    writeVertex(x, y + 1, z, u+uvsize, v+uvsize, light*(1-a-d-h));
-                    writeVertex(x + 1, y + 1, z, u, v+uvsize, light*(1-a-b-g));
+                    float lr0 = (chunks.getLight(chX, chY, chZ, x-1, y-1, z-1, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x-1, y, z-1, 0) + chunks.getLight(chX, chY, chZ, x-1, y-1, z, 0)) / 5.0 / 15.0;
+                    float lr1 = (chunks.getLight(chX, chY, chZ, x-1, y+1, z+1, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x-1, y, z+1, 0) + chunks.getLight(chX, chY, chZ, x-1, y+1, z, 0)) / 5.0 / 15.0;
+                    float lr2 = (chunks.getLight(chX, chY, chZ, x-1, y+1, z-1, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x-1, y, z-1, 0) + chunks.getLight(chX, chY, chZ, x-1, y+1, z, 0)) / 5.0 / 15.0;
+                    float lr3 = (chunks.getLight(chX, chY, chZ, x-1, y-1, z+1, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x-1, y, z+1, 0) + chunks.getLight(chX, chY, chZ, x-1, y-1, z, 0)) / 5.0 / 15.0;
 
-                    writeVertex(x, y, z, u+uvsize, v, light*(1-c-d-e));
-                    writeVertex(x + 1, y + 1, z, u, v+uvsize, light*(1-a-b-g));
-                    writeVertex(x + 1, y, z, u, v, light*(1-b-c-f));
+                    float lg0 = (chunks.getLight(chX, chY, chZ, x-1, y-1, z-1, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x-1, y, z-1, 1) + chunks.getLight(chX, chY, chZ, x-1, y-1, z, 1)) / 5.0 / 15.0;
+                    float lg1 = (chunks.getLight(chX, chY, chZ, x-1, y+1, z+1, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x-1, y, z+1, 1) + chunks.getLight(chX, chY, chZ, x-1, y+1, z, 1)) / 5.0 / 15.0;
+                    float lg2 = (chunks.getLight(chX, chY, chZ, x-1, y+1, z-1, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x-1, y, z-1, 1) + chunks.getLight(chX, chY, chZ, x-1, y+1, z, 1)) / 5.0 / 15.0;
+                    float lg3 = (chunks.getLight(chX, chY, chZ, x-1, y-1, z+1, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x-1, y, z+1, 1) + chunks.getLight(chX, chY, chZ, x-1, y-1, z, 1)) / 5.0 / 15.0;
+
+                    float lb0 = (chunks.getLight(chX, chY, chZ, x-1, y-1, z-1, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x-1, y, z-1, 2) + chunks.getLight(chX, chY, chZ, x-1, y-1, z, 2)) / 5.0 / 15.0;
+                    float lb1 = (chunks.getLight(chX, chY, chZ, x-1, y+1, z+1, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x-1, y, z+1, 2) + chunks.getLight(chX, chY, chZ, x-1, y+1, z, 2)) / 5.0 / 15.0;
+                    float lb2 = (chunks.getLight(chX, chY, chZ, x-1, y+1, z-1, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x-1, y, z-1, 2) + chunks.getLight(chX, chY, chZ, x-1, y+1, z, 2)) / 5.0 / 15.0;
+                    float lb3 = (chunks.getLight(chX, chY, chZ, x-1, y-1, z+1, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x-1, y, z+1, 2) + chunks.getLight(chX, chY, chZ, x-1, y-1, z, 2)) / 5.0 / 15.0;
+
+                    float ls0 = (chunks.getLight(chX, chY, chZ, x-1, y-1, z-1, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x-1, y, z-1, 3) + chunks.getLight(chX, chY, chZ, x-1, y-1, z, 3)) / 5.0 / 15.0;
+                    float ls1 = (chunks.getLight(chX, chY, chZ, x-1, y+1, z+1, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x-1, y, z+1, 3) + chunks.getLight(chX, chY, chZ, x-1, y+1, z, 3)) / 5.0 / 15.0;
+                    float ls2 = (chunks.getLight(chX, chY, chZ, x-1, y+1, z-1, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x-1, y, z-1, 3) + chunks.getLight(chX, chY, chZ, x-1, y+1, z, 3)) / 5.0 / 15.0;
+                    float ls3 = (chunks.getLight(chX, chY, chZ, x-1, y-1, z+1, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x-1, y, z+1, 3) + chunks.getLight(chX, chY, chZ, x-1, y-1, z, 3)) / 5.0 / 15.0;
+
+                    writeVertex(x, y, z, u1, v1, lr0, lg0, lb0, ls0);
+                    writeVertex(x, y + 1, z + 1, u2, v2, lr1, lg1, lb1, ls1);
+                    writeVertex(x, y + 1, z, u1, v2, lr2, lg2, lb2, ls2);
+
+                    writeVertex(x, y, z, u1, v1, lr0, lg0, lb0, ls0);
+                    writeVertex(x, y, z + 1, u2, v1, lr3, lg3, lb3, ls3);
+                    writeVertex(x, y + 1, z + 1, u2, v2, lr1, lg1, lb1, ls1);
+                }
+
+                if (!chunks.voxelNotNull(chX, chY, chZ, x, y, z+1)) {
+
+                    float lr = chunks.getLight(chX, chY, chZ, x, y, z+1, 0) / 15.0;
+                    float lg = chunks.getLight(chX, chY, chZ, x, y, z+1, 1) / 15.0;
+                    float lb = chunks.getLight(chX, chY, chZ, x, y, z+1, 2) / 15.0;
+                    float ls = chunks.getLight(chX, chY, chZ, x, y, z+1, 3) / 15.0;
+
+                    float lr0 = l*(chunks.getLight(chX, chY, chZ, x-1, y-1, z+1, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x, y-1, z+1, 0) + chunks.getLight(chX, chY, chZ, x-1, y, z+1, 0)) / 5.0 / 15.0;
+                    float lr1 = l*(chunks.getLight(chX, chY, chZ, x+1, y+1, z+1, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x, y+1, z+1, 0) + chunks.getLight(chX, chY, chZ, x+1, y, z+1, 0)) / 5.0 / 15.0;
+                    float lr2 = l*(chunks.getLight(chX, chY, chZ, x-1, y+1, z+1, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x, y+1, z+1, 0) + chunks.getLight(chX, chY, chZ, x-1, y, z+1, 0)) / 5.0 / 15.0;
+                    float lr3 = l*(chunks.getLight(chX, chY, chZ, x+1, y-1, z+1, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x, y-1, z+1, 0) + chunks.getLight(chX, chY, chZ, x+1, y, z+1, 0)) / 5.0 / 15.0;
+
+                    float lg0 = l*(chunks.getLight(chX, chY, chZ, x-1, y-1, z+1, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x, y-1, z+1, 1) + chunks.getLight(chX, chY, chZ, x-1, y, z+1, 1)) / 5.0 / 15.0;
+                    float lg1 = l*(chunks.getLight(chX, chY, chZ, x+1, y+1, z+1, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x, y+1, z+1, 1) + chunks.getLight(chX, chY, chZ, x+1, y, z+1, 1)) / 5.0 / 15.0;
+                    float lg2 = l*(chunks.getLight(chX, chY, chZ, x-1, y+1, z+1, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x, y+1, z+1, 1) + chunks.getLight(chX, chY, chZ, x-1, y, z+1, 1)) / 5.0 / 15.0;
+                    float lg3 = l*(chunks.getLight(chX, chY, chZ, x+1, y-1, z+1, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x, y-1, z+1, 1) + chunks.getLight(chX, chY, chZ, x+1, y, z+1, 1)) / 5.0 / 15.0;
+
+                    float lb0 = l*(chunks.getLight(chX, chY, chZ, x-1, y-1, z+1, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x, y-1, z+1, 2) + chunks.getLight(chX, chY, chZ, x-1, y, z+1, 2)) / 5.0 / 15.0;
+                    float lb1 = l*(chunks.getLight(chX, chY, chZ, x+1, y+1, z+1, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x, y+1, z+1, 2) + chunks.getLight(chX, chY, chZ, x+1, y, z+1, 2)) / 5.0 / 15.0;
+                    float lb2 = l*(chunks.getLight(chX, chY, chZ, x-1, y+1, z+1, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x, y+1, z+1, 2) + chunks.getLight(chX, chY, chZ, x-1, y, z+1, 2)) / 5.0 / 15.0;
+                    float lb3 = l*(chunks.getLight(chX, chY, chZ, x+1, y-1, z+1, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x, y-1, z+1, 2) + chunks.getLight(chX, chY, chZ, x+1, y, z+1, 2)) / 5.0 / 15.0;
+
+                    float ls0 = l*(chunks.getLight(chX, chY, chZ, x-1, y-1, z+1, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x, y-1, z+1, 3) + chunks.getLight(chX, chY, chZ, x-1, y, z+1, 3)) / 5.0 / 15.0;
+                    float ls1 = l*(chunks.getLight(chX, chY, chZ, x+1, y+1, z+1, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x, y+1, z+1, 3) + chunks.getLight(chX, chY, chZ, x+1, y, z+1, 3)) / 5.0 / 15.0;
+                    float ls2 = l*(chunks.getLight(chX, chY, chZ, x-1, y+1, z+1, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x, y+1, z+1, 3) + chunks.getLight(chX, chY, chZ, x-1, y, z+1, 3)) / 5.0 / 15.0;
+                    float ls3 = l*(chunks.getLight(chX, chY, chZ, x+1, y-1, z+1, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x, y-1, z+1, 3) + chunks.getLight(chX, chY, chZ, x+1, y, z+1, 3)) / 5.0 / 15.0;
+
+                    writeVertex(x, y, z + 1, u1, v1, lr0, lg0, lb0, ls0);
+                    writeVertex(x + 1, y + 1, z + 1, u2, v2, lr1, lg1, lb1, ls1);
+                    writeVertex(x, y + 1, z + 1, u1, v2, lr2, lg2, lb2, ls2);
+
+                    writeVertex(x, y, z + 1, u1, v1, lr0, lg0, lb0, ls0);
+                    writeVertex(x + 1, y, z + 1, u2, v1, lr3, lg3, lb3, ls3);
+                    writeVertex(x + 1, y + 1, z + 1, u2, v2, lr1, lg1, lb1, ls1);
+                }
+
+                if (!chunks.voxelNotNull(chX, chY, chZ, x, y, z-1)) {
+
+                    float lr = chunks.getLight(chX, chY, chZ, x, y, z-1, 0) / 15.0;
+                    float lg = chunks.getLight(chX, chY, chZ, x, y, z-1, 1) / 15.0;
+                    float lb = chunks.getLight(chX, chY, chZ, x, y, z-1, 2) / 15.0;
+                    float ls = chunks.getLight(chX, chY, chZ, x, y, z-1, 3) / 15.0;
+
+                    float lr0 = l*(chunks.getLight(chX, chY, chZ, x-1, y-1, z-1, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x, y-1, z-1, 0) + chunks.getLight(chX, chY, chZ, x-1, y, z-1, 0)) / 5.0 / 15.0;
+                    float lr1 = l*(chunks.getLight(chX, chY, chZ, x-1, y+1, z-1, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x, y+1, z-1, 0) + chunks.getLight(chX, chY, chZ, x-1, y, z-1, 0)) / 5.0 / 15.0;
+                    float lr2 = l*(chunks.getLight(chX, chY, chZ, x+1, y+1, z-1, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x, y+1, z-1, 0) + chunks.getLight(chX, chY, chZ, x+1, y, z-1, 0)) / 5.0 / 15.0;
+                    float lr3 = l*(chunks.getLight(chX, chY, chZ, x+1, y-1, z-1, 0) + lr*30 + chunks.getLight(chX, chY, chZ, x, y-1, z-1, 0) + chunks.getLight(chX, chY, chZ, x+1, y, z-1, 0)) / 5.0 / 15.0;
+
+                    float lg0 = l*(chunks.getLight(chX, chY, chZ, x-1, y-1, z-1, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x, y-1, z-1, 1) + chunks.getLight(chX, chY, chZ, x-1, y, z-1, 1)) / 5.0 / 15.0;
+                    float lg1 = l*(chunks.getLight(chX, chY, chZ, x-1, y+1, z-1, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x, y+1, z-1, 1) + chunks.getLight(chX, chY, chZ, x-1, y, z-1, 1)) / 5.0 / 15.0;
+                    float lg2 = l*(chunks.getLight(chX, chY, chZ, x+1, y+1, z-1, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x, y+1, z-1, 1) + chunks.getLight(chX, chY, chZ, x+1, y, z-1, 1)) / 5.0 / 15.0;
+                    float lg3 = l*(chunks.getLight(chX, chY, chZ, x+1, y-1, z-1, 1) + lg*30 + chunks.getLight(chX, chY, chZ, x, y-1, z-1, 1) + chunks.getLight(chX, chY, chZ, x+1, y, z-1, 1)) / 5.0 / 15.0;
+
+                    float lb0 = l*(chunks.getLight(chX, chY, chZ, x-1, y-1, z-1, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x, y-1, z-1, 2) + chunks.getLight(chX, chY, chZ, x-1, y, z-1, 2)) / 5.0 / 15.0;
+                    float lb1 = l*(chunks.getLight(chX, chY, chZ, x-1, y+1, z-1, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x, y+1, z-1, 2) + chunks.getLight(chX, chY, chZ, x-1, y, z-1, 2)) / 5.0 / 15.0;
+                    float lb2 = l*(chunks.getLight(chX, chY, chZ, x+1, y+1, z-1, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x, y+1, z-1, 2) + chunks.getLight(chX, chY, chZ, x+1, y, z-1, 2)) / 5.0 / 15.0;
+                    float lb3 = l*(chunks.getLight(chX, chY, chZ, x+1, y-1, z-1, 2) + lb*30 + chunks.getLight(chX, chY, chZ, x, y-1, z-1, 2) + chunks.getLight(chX, chY, chZ, x+1, y, z-1, 2)) / 5.0 / 15.0;
+
+                    float ls0 = l*(chunks.getLight(chX, chY, chZ, x-1, y-1, z-1, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x, y-1, z-1, 3) + chunks.getLight(chX, chY, chZ, x-1, y, z-1, 3)) / 5.0 / 15.0;
+                    float ls1 = l*(chunks.getLight(chX, chY, chZ, x-1, y+1, z-1, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x, y+1, z-1, 3) + chunks.getLight(chX, chY, chZ, x-1, y, z-1, 3)) / 5.0 / 15.0;
+                    float ls2 = l*(chunks.getLight(chX, chY, chZ, x+1, y+1, z-1, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x, y+1, z-1, 3) + chunks.getLight(chX, chY, chZ, x+1, y, z-1, 3)) / 5.0 / 15.0;
+                    float ls3 = l*(chunks.getLight(chX, chY, chZ, x+1, y-1, z-1, 3) + ls*30 + chunks.getLight(chX, chY, chZ, x, y-1, z-1, 3) + chunks.getLight(chX, chY, chZ, x+1, y, z-1, 3)) / 5.0 / 15.0;
+
+                    writeVertex(x, y, z, u2, v1, lr0, lg0, lb0, ls0);
+                    writeVertex(x, y + 1, z, u2, v2, lr1, lg1, lb1, ls1);
+                    writeVertex(x + 1, y + 1, z, u1, v2, lr2, lg2, lb2, ls2);
+
+                    writeVertex(x, y, z, u2, v1, lr0, lg0, lb0, ls0);
+                    writeVertex(x + 1, y + 1, z, u1, v2, lr2, lg2, lb2, ls2);
+                    writeVertex(x + 1, y, z, u1, v1, lr3, lg3, lb3, ls3);
                 }
             }
         }

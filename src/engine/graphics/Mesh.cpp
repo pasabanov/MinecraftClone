@@ -78,4 +78,5 @@ void Mesh::create(const float* buffer, uint verticesCount, const int* attrs) {
     }
 
     glBindVertexArray(GL_NONE);
+    glBindBuffer(GL_ARRAY_BUFFER, GL_NONE);
 }

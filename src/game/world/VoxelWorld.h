@@ -8,6 +8,8 @@
 #include "../../engine/graphics/Shader.h"
 #include "../../engine/camera/Camera.h"
 #include "../../engine/graphics/Texture2D.h"
+#include "../../engine/graphics/LineBatch.h"
+#include "../../engine/light/LightSolver.h"
 
 class VoxelWorld : public View {
 
@@ -24,13 +26,23 @@ class VoxelWorld : public View {
     ChunkHeap mChunks;
     MeshHeap mMeshes;
 
+    LightSolver mSolverR;
+    LightSolver mSolverG;
+    LightSolver mSolverB;
+    LightSolver mSolverS;
+
     Shader mTextureShader;
     Texture2D mTexture;
 
     Shader mCrosshairShader;
     Mesh mCrosshairMesh;
 
+    Shader mLineShader;
+    LineBatch mHighlighting;
+
     Camera mCamera;
+
+    void initializeLight();
 
 public:
 
@@ -43,6 +55,9 @@ public:
     void update() override;
 
     void draw() const override;
+
+    void save(const std::string& filename) const;
+    void load(const std::string& filename);
 };
 
 #endif //MINECRAFT_VOXELWORLD_H

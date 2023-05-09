@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <queue>
 
 // smart ptrs
 #include <memory>
@@ -38,7 +39,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/noise.hpp>
 
-// images
+// image
 #include <SOIL/SOIL.h>
 
 // typedefs

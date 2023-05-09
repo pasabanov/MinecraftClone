@@ -81,6 +81,8 @@ public:
 
     void requestFocus() const;
 
+    void fillColor(float red = 1, float green = 1, float blue = 1, float alpha = 1);
+
     void refresh();
 };
 

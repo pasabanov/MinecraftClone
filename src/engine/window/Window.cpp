@@ -29,35 +29,28 @@ void Window::windowSizeCallback(GLFWwindow* glwindow, int width, int height) {
 
 
 void Window::onCursorPositionChanged(double xpos, double ypos) {
-
     mEvents.onCursorPositionChanged(xpos, ypos);
-
     if (mView != nullptr)
         mView->onCursorPositionChanged(xpos, ypos, mEvents.getDeltaX(), mEvents.getDeltaY());
 }
 
 void Window::onMouseButtonAction(int button, int action, int mode) {
-
     mEvents.onMouseButtonAction(button, action, mode);
-
     if (mView != nullptr)
         mView->onMouseButtonAction(button, action, mode);
 }
 
 void Window::onKeyboardKeyAction(int keycode, int scancode, int action, int mode) {
-
     mEvents.onKeyboardKeyAction(keycode, scancode, action, mode);
-
     if (mView != nullptr)
         mView->onKeyboardKeyAction(keycode, scancode, action, mode);
 }
 
 void Window::onWindowSizeChanged(int width, int height) {
-
+    requestFocus();
     glViewport(0, 0, width, height);
     mWidth = width;
     mHeight = height;
-
     if (mView != nullptr)
         mView->onViewSizeChanged(width, height);
 }
@@ -102,7 +95,7 @@ Window::Window(const std::string& title, int width, int height)
     if (mWindow == nullptr)
         throw WindowCreationException("Failed to create window");
 
-    glfwMakeContextCurrent(mWindow);
+    requestFocus();
 
     glewExperimental = true;
 
@@ -153,6 +146,7 @@ void Window::setShouldClose(bool flag) {
 
 
 void Window::pollEvents() {
+    requestFocus();
     mEvents.onNextFrame();
     glfwPollEvents();
     if (mView != nullptr)
@@ -225,6 +219,13 @@ void Window::setTitle(const std::string& title) {
 
 void Window::requestFocus() const {
     glfwMakeContextCurrent(mWindow);
+}
+
+
+
+void Window::fillColor(float red, float green, float blue, float alpha) {
+    requestFocus();
+    glClearColor(red, green, blue, alpha);
 }
 
 

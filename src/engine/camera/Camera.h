@@ -5,9 +5,6 @@
 
 class Camera {
 
-    inline static const float DEFAULT_Z_NEAR = 0.03125;
-    inline static const float DEFAULT_Z_FAR = 1024;
-
     glm::vec3 mPosition;
     float mFieldOfView;
     float mAspect;
@@ -24,6 +21,9 @@ class Camera {
     void updateVectors();
 
 public:
+
+    inline static const float DEFAULT_Z_NEAR = 0.03125;
+    inline static const float DEFAULT_Z_FAR = 1024;
 
     Camera(const glm::vec3& position = { 0, 0, 0 },
            float fieldOfView = glm::radians(70.0f),

@@ -6,11 +6,13 @@ Voxel::Voxel(uint id) : mId(id) {}
 
 
 
-uint Voxel::getId() const {
+uint& Voxel::getId() {
     return mId;
 }
 
-
+uint Voxel::getId() const {
+    return mId;
+}
 
 void Voxel::setId(uint id) {
     mId = id;
