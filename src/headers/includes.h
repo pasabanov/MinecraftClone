@@ -43,6 +43,6 @@
 #include <SOIL/SOIL.h>
 
 // typedefs
-#include "typedefs.h"
+#include <headers/typedefs.h>
 
 #endif //MINECRAFT_INCLUDES_H

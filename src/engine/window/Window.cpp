@@ -1,4 +1,4 @@
-#include "Window.h"
+#include <engine/window/Window.h>
 
 
 
@@ -150,7 +150,7 @@ void Window::pollEvents() {
     mEvents.onNextFrame();
     glfwPollEvents();
     if (mView != nullptr)
-        mView->applyEvents(mEvents, mClock.elapsedTimeMillis());
+        mView->applyEvents(mEvents, mClock.elapsedMillis());
 }
 
 

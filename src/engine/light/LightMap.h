@@ -1,7 +1,8 @@
 #ifndef MINECRAFT_LIGHTMAP_H
 #define MINECRAFT_LIGHTMAP_H
 
-#include "../../headers/includes.h"
+#include <headers/includes.h>
+
 
 class LightMap {
 

@@ -1,9 +1,10 @@
 #ifndef MINECRAFT_VIEW_H
 #define MINECRAFT_VIEW_H
 
-#include "../../headers/includes.h"
+#include <headers/includes.h>
 
-#include "../window/Events.h"
+#include <engine/window/Events.h>
+
 
 class View {
 

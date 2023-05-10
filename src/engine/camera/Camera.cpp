@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include <engine/camera/Camera.h>
 
 
 
@@ -7,7 +7,6 @@ void Camera::updateVectors() {
     mRight = glm::vec3(mRotation * glm::vec4(-1, 0, 0, 1));
     mUp = glm::vec3(mRotation * glm::vec4(0, 1, 0, 1));
 }
-
 
 
 

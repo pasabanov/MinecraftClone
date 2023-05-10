@@ -1,9 +1,7 @@
-#include "Voxel.h"
-
+#include <engine/voxel/Voxel.h>
 
 
 Voxel::Voxel(uint id) : mId(id) {}
-
 
 
 uint& Voxel::getId() {
@@ -17,7 +15,6 @@ uint Voxel::getId() const {
 void Voxel::setId(uint id) {
     mId = id;
 }
-
 
 
 bool Voxel::operator==(const Voxel& other) {

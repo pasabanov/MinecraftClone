@@ -1,10 +1,11 @@
 #ifndef MINECRAFT_CHUNK_H
 #define MINECRAFT_CHUNK_H
 
-#include "../../headers/includes.h"
+#include <headers/includes.h>
 
-#include "Voxel.h"
-#include "../light/LightMap.h"
+#include <engine/voxel/Voxel.h>
+#include <engine/light/LightMap.h>
+
 
 class Chunk {
 

@@ -1,9 +1,10 @@
 #ifndef MINECRAFT_EVENTS_H
 #define MINECRAFT_EVENTS_H
 
-#include "../../headers/includes.h"
+#include <headers/includes.h>
 
-#include "Key.h"
+#include <engine/window/Key.h>
+
 
 class Events {
 

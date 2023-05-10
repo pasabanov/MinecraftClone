@@ -1,9 +1,10 @@
 #ifndef MINECRAFT_LIGHTSOLVER_H
 #define MINECRAFT_LIGHTSOLVER_H
 
-#include "../../headers/includes.h"
+#include <headers/includes.h>
 
-#include "../voxel/ChunkHeap.h"
+#include <engine/voxel/ChunkHeap.h>
+
 
 class LightEntry {
 public:

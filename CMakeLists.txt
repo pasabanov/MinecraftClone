@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.24.2)
 project(Minecraft)
 set(CMAKE_CXX_STANDARD 20)
 
+include_directories(src)
+
 
 # Functions for library linking
 
@@ -22,7 +24,7 @@ endfunction()
 
 # SOURCE FILES
 
-file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS src/*.cpp src/*.h)
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS src/*.cpp src/*.cc src/*.h src/*.hh src/*.hpp)
 
 
 # EXECUTABLE

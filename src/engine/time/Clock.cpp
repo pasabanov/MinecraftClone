@@ -1,10 +1,25 @@
-#include "Clock.h"
+#include <engine/time/Clock.h>
 
 
+timespec currentTime() {
+    timespec curTime { 0, 0 };
+    clock_gettime(CLOCK_MONOTONIC, &curTime);
+    return curTime;
+}
+
+
+timespec operator+(const timespec& start, const timespec& stop) {
+    timespec result { stop.tv_sec + start.tv_sec, stop.tv_nsec + start.tv_nsec };
+    if (result.tv_nsec > 1000000000L) {
+        result.tv_sec += 1;
+        result.tv_nsec -= 1000000000L;
+    }
+    return result;
+}
 
 timespec operator-(const timespec& start, const timespec& stop) {
     timespec result { stop.tv_sec - start.tv_sec, stop.tv_nsec - start.tv_nsec };
-    if (stop.tv_nsec - start.tv_nsec < 0) {
+    if (result.tv_nsec < 0) {
         result.tv_sec -= 1;
         result.tv_nsec += 1000000000L;
     }
@@ -12,60 +27,63 @@ timespec operator-(const timespec& start, const timespec& stop) {
 }
 
 
-
 Clock::Clock() {
     start();
 }
 
 
-
 void Clock::start() {
-    mTime.tv_sec = mTime.tv_nsec = 0;
-    clock_gettime(CLOCK_MONOTONIC, &mTime);
+    mTime = currentTime();
+    mIsPaused = false;
 }
-
-
 
 void Clock::restart() {
     start();
 }
 
 
-
 void Clock::pause() {
-    // do nothing
+    if (mIsPaused)
+        return;
+    timespec curTime = currentTime();
+    mTime = mTime + curTime;
+    mIsPaused = true;
 }
-
-
 
 void Clock::resume() {
-    start();
+    if (!mIsPaused)
+        return;
+    timespec curTime = currentTime();
+    mTime = mTime - curTime;
+    mIsPaused = false;
 }
 
 
-
-long Clock::elapsedTimeSecond() {
-    return elapsedTimeNanos() / 1000000000L;
+long Clock::elapsedSeconds(bool refresh) {
+    return elapsedNanos(refresh) / 1000000000L;
 }
 
-
-
-long Clock::elapsedTimeMillis() {
-    return elapsedTimeNanos() / 1000000L;
+long Clock::elapsedMillis(bool refresh) {
+    return elapsedNanos(refresh) / 1000000L;
 }
 
-
-
-long Clock::elapsedTimeMicros() {
-    return elapsedTimeNanos() / 1000L;
+long Clock::elapsedMicros(bool refresh) {
+    return elapsedNanos(refresh) / 1000L;
 }
 
-
-
-long Clock::elapsedTimeNanos() {
-    timespec curTime { 0, 0 };
-    clock_gettime(CLOCK_MONOTONIC, &curTime);
+long Clock::elapsedNanos(bool refresh) {
+    timespec curTime = currentTime();
     timespec elapsedTime = curTime - mTime;
-    mTime = curTime;
+    if (refresh)
+        mTime = curTime;
     return elapsedTime.tv_sec * 1000000000L + elapsedTime.tv_nsec;
+}
+
+
+float Clock::elapsedSecondsF(bool refresh) {
+    return ((float) elapsedNanos(refresh)) / 1000000000.0f;
+}
+
+double Clock::elapsedSecondsD(bool refresh) {
+    return ((double) elapsedNanos(refresh)) / 1000000000.0;
 }

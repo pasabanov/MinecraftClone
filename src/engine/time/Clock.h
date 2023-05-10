@@ -1,13 +1,13 @@
 #ifndef MINECRAFT_CLOCK_H
 #define MINECRAFT_CLOCK_H
 
-#include "../../headers/includes.h"
+#include <headers/includes.h>
 
-timespec operator-(const timespec& start, const timespec& stop);
 
 class Clock {
 
     timespec mTime;
+    bool mIsPaused = false;
 
 public:
 
@@ -19,10 +19,13 @@ public:
     void pause();
     void resume();
 
-    long elapsedTimeSecond();
-    long elapsedTimeMillis();
-    long elapsedTimeMicros();
-    long elapsedTimeNanos();
+    long elapsedSeconds(bool refresh = true);
+    long elapsedMillis(bool refresh = true);
+    long elapsedMicros(bool refresh = true);
+    long elapsedNanos(bool refresh = true);
+
+    float elapsedSecondsF(bool refresh = true);
+    double elapsedSecondsD(bool refresh = true);
 };
 
 #endif //MINECRAFT_CLOCK_H

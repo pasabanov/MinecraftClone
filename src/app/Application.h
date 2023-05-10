@@ -1,7 +1,7 @@
 #ifndef MINECRAFT_APPLICATION_H
 #define MINECRAFT_APPLICATION_H
 
-#include "../headers/includes.h"
+#include <headers/includes.h>
 
 class Application {
 

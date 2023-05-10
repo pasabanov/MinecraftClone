@@ -1,10 +1,9 @@
 #include "LightMap.h"
 
-#include "../voxel/Chunk.h"
+#include <engine/voxel/Chunk.h>
 
 
 LightMap::LightMap() : mMap(Chunk::VOLUME) {}
-
 
 
 ubyte LightMap::get(int x, int y, int z, int channel) const {
@@ -26,7 +25,6 @@ ubyte LightMap::getB(int x, int y, int z) const {
 ubyte LightMap::getS(int x, int y, int z) const {
     return (mMap[(y*Chunk::LENGTH + z)*Chunk::WIDTH + x] >> 12) & 0xF;
 }
-
 
 
 void LightMap::set(int x, int y, int z, int channel, int value) {

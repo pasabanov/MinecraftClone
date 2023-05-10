@@ -1,10 +1,10 @@
 #ifndef MINECRAFT_VOXELSRENDERER_H
 #define MINECRAFT_VOXELSRENDERER_H
 
-#include "../../headers/includes.h"
+#include <headers/includes.h>
 
-#include "MeshHeap.h"
-#include "../voxel/ChunkHeap.h"
+#include <engine/graphics/MeshHeap.h>
+#include <engine/voxel/ChunkHeap.h>
 
 class VoxelsRenderer {
 

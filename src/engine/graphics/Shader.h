@@ -1,9 +1,9 @@
 #ifndef MINECRAFT_SHADER_H
 #define MINECRAFT_SHADER_H
 
-#include "../../headers/includes.h"
+#include <headers/includes.h>
 
-#include "../exception/MessageException.h"
+#include <engine/exception/MessageException.h>
 
 class Shader {
 

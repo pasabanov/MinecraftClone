@@ -1,12 +1,13 @@
 #ifndef MINECRAFT_WINDOW_H
 #define MINECRAFT_WINDOW_H
 
-#include "../../headers/includes.h"
+#include <headers/includes.h>
 
-#include "Key.h"
-#include "../exception/MessageException.h"
-#include "../view/View.h"
-#include "../time/Clock.h"
+#include <engine/window/Key.h>
+#include <engine/exception/MessageException.h>
+#include <engine/view/View.h>
+#include <engine/time/Clock.h>
+
 
 class Window {
 

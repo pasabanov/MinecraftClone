@@ -1,7 +1,7 @@
 #ifndef MINECRAFT_MESSAGEEXCEPTION_H
 #define MINECRAFT_MESSAGEEXCEPTION_H
 
-#include "../../headers/includes.h"
+#include <headers/includes.h>
 
 class MessageException : public std::exception {
 

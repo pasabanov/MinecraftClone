@@ -1,9 +1,9 @@
 #ifndef MINECRAFT_TEXTURE2D_H
 #define MINECRAFT_TEXTURE2D_H
 
-#include "../../headers/includes.h"
+#include <headers/includes.h>
 
-#include "../exception/MessageException.h"
+#include <engine/exception/MessageException.h>
 
 class Texture2D {
 

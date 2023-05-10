@@ -1,7 +1,7 @@
 #ifndef MINECRAFT_KEY_H
 #define MINECRAFT_KEY_H
 
-#include "../../headers/includes.h"
+#include <headers/includes.h>
 
 class Key {
 public:

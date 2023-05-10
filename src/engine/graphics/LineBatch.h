@@ -1,9 +1,10 @@
 #ifndef MINECRAFT_LINEBATCH_H
 #define MINECRAFT_LINEBATCH_H
 
-#include "../../headers/includes.h"
+#include <headers/includes.h>
 
-#include "Mesh.h"
+#include <engine/graphics/Mesh.h>
+
 
 class LineBatch {
 

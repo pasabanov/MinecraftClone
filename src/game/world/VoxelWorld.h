@@ -1,15 +1,16 @@
 #ifndef MINECRAFT_VOXELWORLD_H
 #define MINECRAFT_VOXELWORLD_H
 
-#include "../../headers/includes.h"
+#include <headers/includes.h>
 
-#include "../../engine/view/View.h"
-#include "../../engine/graphics/VoxelsRenderer.h"
-#include "../../engine/graphics/Shader.h"
-#include "../../engine/camera/Camera.h"
-#include "../../engine/graphics/Texture2D.h"
-#include "../../engine/graphics/LineBatch.h"
-#include "../../engine/light/LightSolver.h"
+#include <engine/view/View.h>
+#include <engine/graphics/VoxelsRenderer.h>
+#include <engine/graphics/Shader.h>
+#include <engine/camera/Camera.h>
+#include <engine/graphics/Texture2D.h>
+#include <engine/graphics/LineBatch.h>
+#include <engine/light/LightSolver.h>
+
 
 class VoxelWorld : public View {
 

@@ -1,8 +1,8 @@
-#include "headers/includes.h"
+#include <headers/includes.h>
 
-#include "engine/window/Window.h"
-#include "game/world/VoxelWorld.h"
-#include "app/Application.h"
+#include <engine/window/Window.h>
+#include <game/world/VoxelWorld.h>
+#include <app/Application.h>
 
 int main() {
 
@@ -13,7 +13,7 @@ int main() {
                     new VoxelWorld(
                             window.getWidth(),
                             window.getHeight(),
-                            8, 2, 8
+                            4, 1, 4
                     )
             )
     );
