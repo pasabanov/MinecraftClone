@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.24.2)
 project(Minecraft)
 set(CMAKE_CXX_STANDARD 20)
 
@@ -22,7 +22,7 @@ endfunction()
 
 # SOURCE FILES
 
-file(GLOB_RECURSE SOURCE_FILES src/*.cpp src/*.h)
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS src/*.cpp src/*.h)
 
 
 # EXECUTABLE
