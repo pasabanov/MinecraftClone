@@ -31,7 +31,7 @@ function(auto_target_link_libraries TARGET)
         # directories to search
         set(LIBRARY_SEARCH_DIRECTORIES ${CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES})
         # searching in project directory too
-        list(APPEND CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES
+        list(APPEND LIBRARY_SEARCH_DIRECTORIES
                 ${PROJECT_SOURCE_DIR}
                 ${PROJECT_SOURCE_DIR}/lib
                 ${PROJECT_SOURCE_DIR}/libs
