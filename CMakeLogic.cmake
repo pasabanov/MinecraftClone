@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.24.2)
 
+
+
+# Link libraries to TARGET by their names or files
 function(auto_target_link_libraries TARGET)
 
     find_package(PkgConfig)
@@ -12,7 +15,7 @@ function(auto_target_link_libraries TARGET)
             target_link_libraries(${CMAKE_PROJECT_NAME} ${LIBRARY})
             set(${LIBRARY}_LINKED TRUE)
         else()
-            set(DEV_NULL pkg_check_modules(LIB_${LIBRARY} ${LIBRARY}))
+            pkg_check_modules(LIB_${LIBRARY} QUIET ${LIBRARY})
             if(DEFINED LIB_${LIBRARY}_LIBRARIES)
                 target_link_libraries(${TARGET} ${LIB_${LIBRARY}_LIBRARIES})
                 set(${LIBRARY}_LINKED TRUE)
@@ -46,4 +49,30 @@ function(auto_target_link_libraries TARGET)
             message(FATAL_ERROR "Cannot find library ${LIBRARY}.")
         endif()
     endforeach()
+endfunction()
+
+
+
+# Set include, source, test, resource and out directories
+function(set_project_directories INCLUDE_DIR SOURCE_DIR TEST_DIR RESOURCE_DIR OUT_DIR)
+
+    set(INCLUDE_DIR ${PROJECT_SOURCE_DIR}/${INCLUDE_DIR} PARENT_SCOPE)
+    set(SOURCE_DIR ${PROJECT_SOURCE_DIR}/${SOURCE_DIR} PARENT_SCOPE)
+    set(TEST_DIR ${PROJECT_SOURCE_DIR}/${TEST_DIR} PARENT_SCOPE)
+    set(RESOURCE_DIR ${PROJECT_SOURCE_DIR}/${RESOURCE_DIR} PARENT_SCOPE)
+
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY out)
+
+    file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS ${INCLUDE_DIR}/*.h ${INCLUDE_DIR}/*.hh ${INCLUDE_DIR}/*.hpp)
+    file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS ${SOURCE_DIR}/*.cpp ${SOURCE_DIR}/*.cc)
+    file(GLOB_RECURSE TEST_FILES CONFIGURE_DEPENDS ${TEST_DIR}/*.cpp ${TEST_DIR}/*.cc ${TEST_DIR}/*.h ${TEST_DIR}/*.hh ${TEST_DIR}/*.hpp)
+    file(GLOB_RECURSE RESOURCE_FILES CONFIGURE_DEPENDS ${RESOURCE_DIR}/*)
+
+    include_directories(${INCLUDE_DIR})
+
+    set(HEADERS ${HEADERS} PARENT_SCOPE)
+    set(SOURCE_FILES ${SOURCE_FILES} PARENT_SCOPE)
+    set(TEST_FILES ${TEST_FILES} PARENT_SCOPE)
+    set(RESOURCE_FILES ${RESOURCE_FILES} PARENT_SCOPE)
+
 endfunction()
