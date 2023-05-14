@@ -33,14 +33,12 @@ function(auto_target_link_libraries TARGET)
         # searching in project directory too
         list(APPEND LIBRARY_SEARCH_DIRECTORIES
                 ${PROJECT_SOURCE_DIR}
-                ${PROJECT_SOURCE_DIR}/lib
-                ${PROJECT_SOURCE_DIR}/libs
-                ${PROJECT_SOURCE_DIR}/library
-                ${PROJECT_SOURCE_DIR}/libraries
-                ${LIB_DIR}
-                ${LIBS_DIR}
-                ${LIBRARY_DIR}
-                ${LIBRARIES_DIR})
+                ${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/libs
+                ${PROJECT_SOURCE_DIR}/library ${PROJECT_SOURCE_DIR}/libraries
+                ${PROJECT_SOURCE_DIR}/l ${PROJECT_SOURCE_DIR}/L
+                ${LIB_DIR} ${LIBS_DIR} ${LIBRARY_DIR} ${LIBRARIES_DIR}
+                ${LIB_DIRECTORY} ${LIBS_DIRECTORY} ${LIBRARY_DIRECTORY} ${LIBRARIES_DIRECTORY}
+                ${LIB_FOLDER} ${LIBS_FOLDER} ${LIBRARY_FOLDER} ${LIBRARIES_FOLDER})
 
         # searching
         foreach(LIB_DIR IN ITEMS ${LIBRARY_SEARCH_DIRECTORIES})
@@ -95,9 +93,13 @@ function(set_project_directories INCLUDE_DIR SOURCE_DIR TEST_DIR RESOURCE_DIR LI
     include_directories(${INCLUDE_DIR})
 
     set(OUT_DIR ${OUT_DIR} PARENT_SCOPE)
-    get_filename_component(OUT_DIR_NAME ${OUT_DIR} NAME)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${OUT_DIR_NAME} PARENT_SCOPE)
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${OUT_DIR_NAME} PARENT_SCOPE)
-    execute_process(COMMAND mkdir -p ${PROJECT_BINARY_DIR}/${OUT_DIR_NAME}/)
+    if(IS_ABSOLUTE ${OUT_DIR})
+        set(ABSOLUTE_OUT_DIR ${OUT_DIR})
+    else()
+        set(ABSOLUTE_OUT_DIR ${PROJECT_BINARY_DIR}/${OUT_DIR})
+    endif()
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${ABSOLUTE_OUT_DIR} PARENT_SCOPE)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${ABSOLUTE_OUT_DIR} PARENT_SCOPE)
+    execute_process(COMMAND mkdir -p ${ABSOLUTE_OUT_DIR}/)
 
 endfunction()
