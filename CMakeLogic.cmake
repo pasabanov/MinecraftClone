@@ -5,16 +5,17 @@ cmake_minimum_required(VERSION 3.24.2)
 # Link libraries to TARGET by their names or files
 function(auto_target_link_libraries TARGET)
 
-    find_package(PkgConfig)
-
     foreach(LIBRARY IN ITEMS ${ARGN})
 
         set(${LIBRARY}_LINKED FALSE)
 
         if(EXISTS ${LIBRARY})
+            # checking absolute path
             target_link_libraries(${TARGET} ${LIBRARY})
             set(${LIBRARY}_LINKED TRUE)
         else()
+            # checking if pkg-config can find it
+            find_package(PkgConfig)
             pkg_check_modules(LIB_${LIBRARY} QUIET ${LIBRARY})
             if(DEFINED LIB_${LIBRARY}_LIBRARIES)
                 target_link_libraries(${TARGET} ${LIB_${LIBRARY}_LIBRARIES})
@@ -22,11 +23,23 @@ function(auto_target_link_libraries TARGET)
             endif()
         endif()
 
+        # library is found, no need to search further
         if(${${LIBRARY}_LINKED} STREQUAL TRUE)
             continue()
         endif()
 
-        foreach(LIB_DIR IN ITEMS ${CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES})
+        # directories to search
+        set(LIBRARY_SEARCH_DIRECTORIES ${CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES})
+        # searching in project directory too
+        list(APPEND CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES
+                ${PROJECT_SOURCE_DIR}
+                ${PROJECT_SOURCE_DIR}/lib
+                ${PROJECT_SOURCE_DIR}/libs
+                ${PROJECT_SOURCE_DIR}/library
+                ${PROJECT_SOURCE_DIR}/libraries)
+
+        # searching
+        foreach(LIB_DIR IN ITEMS ${LIBRARY_SEARCH_DIRECTORIES})
             if(EXISTS ${LIB_DIR}/${LIBRARY})
                 target_link_libraries(${TARGET} ${LIB_DIR}/${LIBRARY})
                 set(${LIBRARY}_LINKED TRUE)
@@ -45,6 +58,7 @@ function(auto_target_link_libraries TARGET)
             endif()
         endforeach()
 
+        # library not found
         if(NOT ${${LIBRARY}_LINKED} STREQUAL TRUE)
             message(FATAL_ERROR "Cannot find library ${LIBRARY}.")
         endif()
@@ -54,6 +68,7 @@ endfunction()
 
 
 # Set include, source, test, resource and out directories
+# !!! CMAKE_ARCHIVE_OUTPUT_DIRECTORY must be set before this function !!!
 function(set_project_directories INCLUDE_DIR SOURCE_DIR TEST_DIR RESOURCE_DIR OUT_DIR)
 
     set(INCLUDE_DIR ${INCLUDE_DIR} PARENT_SCOPE)
