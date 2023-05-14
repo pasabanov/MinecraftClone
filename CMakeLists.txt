@@ -6,7 +6,7 @@ include(CMakeLogic.cmake)
 
 
 # DIRECTORIES
-set_project_directories(src src test res out)
+set_project_directories(src src test res lib out)
 
 
 # EXECUTABLE

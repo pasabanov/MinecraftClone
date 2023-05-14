@@ -36,7 +36,11 @@ function(auto_target_link_libraries TARGET)
                 ${PROJECT_SOURCE_DIR}/lib
                 ${PROJECT_SOURCE_DIR}/libs
                 ${PROJECT_SOURCE_DIR}/library
-                ${PROJECT_SOURCE_DIR}/libraries)
+                ${PROJECT_SOURCE_DIR}/libraries
+                ${LIB_DIR}
+                ${LIBS_DIR}
+                ${LIBRARY_DIR}
+                ${LIBRARIES_DIR})
 
         # searching
         foreach(LIB_DIR IN ITEMS ${LIBRARY_SEARCH_DIRECTORIES})
@@ -69,17 +73,19 @@ endfunction()
 
 # Set include, source, test, resource and out directories
 # !!! CMAKE_ARCHIVE_OUTPUT_DIRECTORY must be set before this function !!!
-function(set_project_directories INCLUDE_DIR SOURCE_DIR TEST_DIR RESOURCE_DIR OUT_DIR)
+function(set_project_directories INCLUDE_DIR SOURCE_DIR TEST_DIR RESOURCE_DIR LIB_DIR OUT_DIR)
 
     set(INCLUDE_DIR ${INCLUDE_DIR} PARENT_SCOPE)
     set(SOURCE_DIR ${SOURCE_DIR} PARENT_SCOPE)
     set(TEST_DIR ${TEST_DIR} PARENT_SCOPE)
     set(RESOURCE_DIR ${RESOURCE_DIR} PARENT_SCOPE)
+    set(LIB_DIR ${LIB_DIR} PARENT_SCOPE)
 
     file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS ${INCLUDE_DIR}/*.h ${INCLUDE_DIR}/*.hh ${INCLUDE_DIR}/*.hpp)
     file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS ${SOURCE_DIR}/*.cpp ${SOURCE_DIR}/*.cc)
     file(GLOB_RECURSE TEST_FILES CONFIGURE_DEPENDS ${TEST_DIR}/*.cpp ${TEST_DIR}/*.cc ${TEST_DIR}/*.h ${TEST_DIR}/*.hh ${TEST_DIR}/*.hpp)
     file(GLOB_RECURSE RESOURCE_FILES CONFIGURE_DEPENDS ${RESOURCE_DIR}/*)
+    file(GLOB_RECURSE LIB_FILES CONFIGURE_DEPENDS ${LIB_DIR}/*)
 
     set(HEADERS ${HEADERS} PARENT_SCOPE)
     set(SOURCE_FILES ${SOURCE_FILES} PARENT_SCOPE)
