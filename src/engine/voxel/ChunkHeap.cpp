@@ -47,11 +47,11 @@ ChunkHeap::ChunkHeap(uint width, uint height, uint length)
 //                            if (realY <= 2 && id != 0)
 //                                id = 2;
                             // 3
-                            int id = vy <= ((sin(vx * 0.6) + cos(vz * 0.4)) * 0.5 + 0.5) * 10;
-                            if (vy <= 2 && id != 0)
-                                id = 2;
+//                            int id = vy <= ((sin(vx * 0.6) + cos(vz * 0.4)) * 0.5 + 0.5) * 10;
+//                            if (vy <= 2 && id != 0)
+//                                id = 2;
                             // 4
-//                            int id = vy <= 6 ? vy <= 2 ? vy >= 1 ? 2 : 0 : 1 : 0;
+                            int id = vy <= 6 ? vy <= 2 ? vy >= 1 ? 2 : 0 : 1 : 0;
                             return Voxel(id);
                         }
                 ));

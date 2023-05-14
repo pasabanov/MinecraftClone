@@ -64,18 +64,32 @@ VoxelWorld::VoxelWorld(int width, int height, int worldWidth, int worldHeight, i
 , mMeshes(mRenderer.render(mChunks)) {
 
     mTextureShader.load(
-            "../res/shader/texture_2d_in_3d/texture_2d_in_3d.glslv",
-            "../res/shader/texture_2d_in_3d/texture_2d_in_3d.glslf");
-    mTexture.load("../res/image/blocks.png");
+            "res/shader/texture_2d_in_3d/texture_2d_in_3d.glslv",
+            "res/shader/texture_2d_in_3d/texture_2d_in_3d.glslf");
+    mTexture.load("res/image/blocks.png");
 
     mCrosshairShader.load(
-            "../res/shader/crosshair/crosshair.glslv",
-            "../res/shader/crosshair/crosshair.glslf");
+            "res/shader/crosshair/crosshair.glslv",
+            "res/shader/crosshair/crosshair.glslf");
     mCrosshairMesh = Mesh(crosshair_vertices, 4, crosshair_attrs);
 
     mLineShader.load(
-            "../res/shader/line/line.glslv",
-            "../res/shader/line/line.glslf");
+            "res/shader/line/line.glslv",
+            "res/shader/line/line.glslf");
+
+//    mTextureShader.load(
+//            "../res/shader/texture_2d_in_3d/texture_2d_in_3d.glslv",
+//            "../res/shader/texture_2d_in_3d/texture_2d_in_3d.glslf");
+//    mTexture.load("../res/image/blocks.png");
+//
+//    mCrosshairShader.load(
+//            "../res/shader/crosshair/crosshair.glslv",
+//            "../res/shader/crosshair/crosshair.glslf");
+//    mCrosshairMesh = Mesh(crosshair_vertices, 4, crosshair_attrs);
+//
+//    mLineShader.load(
+//            "../res/shader/line/line.glslv",
+//            "../res/shader/line/line.glslf");
 
     glEnable(GL_DEPTH_TEST);
 //    glEnable(GL_CULL_FACE);

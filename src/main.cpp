@@ -4,6 +4,7 @@
 #include <game/world/VoxelWorld.h>
 #include <app/Application.h>
 
+
 int main() {
 
     Window window (Application::APP_NAME);
@@ -13,7 +14,7 @@ int main() {
                     new VoxelWorld(
                             window.getWidth(),
                             window.getHeight(),
-                            4, 1, 4
+                            2, 1, 2
                     )
             )
     );

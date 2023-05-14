@@ -1,0 +1,12 @@
+min_cmake_version=3.24.2
+cpp_standard=20
+
+project_name=Minecraft
+
+headers_dir=src
+source_dir=src
+resource_dir=res
+
+output_dir=out
+
+libraries=gl,opengl,glfw3,glew,SOIL
