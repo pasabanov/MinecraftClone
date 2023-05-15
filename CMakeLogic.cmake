@@ -2,8 +2,9 @@ cmake_minimum_required(VERSION 3.24.2)
 
 
 
-# Link libraries to TARGET by their names or files
-function(auto_target_link_libraries TARGET)
+function(find_libraries OUT_VAR)
+
+    unset(OUT_LIST)
 
     foreach(LIBRARY IN ITEMS ${ARGN})
 
@@ -11,14 +12,14 @@ function(auto_target_link_libraries TARGET)
 
         if(EXISTS ${LIBRARY})
             # checking absolute path
-            target_link_libraries(${TARGET} ${LIBRARY})
+            list(APPEND OUT_LIST ${LIBRARY})
             set(${LIBRARY}_LINKED TRUE)
         else()
             # checking if pkg-config can find it
             find_package(PkgConfig)
             pkg_check_modules(LIB_${LIBRARY} QUIET ${LIBRARY})
             if(DEFINED LIB_${LIBRARY}_LIBRARIES)
-                target_link_libraries(${TARGET} ${LIB_${LIBRARY}_LIBRARIES})
+                list(APPEND OUT_LIST ${LIB_${LIBRARY}_LIBRARIES})
                 set(${LIBRARY}_LINKED TRUE)
             endif()
         endif()
@@ -42,24 +43,30 @@ function(auto_target_link_libraries TARGET)
 
         # searching
         foreach(LIB_DIR IN ITEMS ${LIBRARY_SEARCH_DIRECTORIES})
+
             if(EXISTS ${LIB_DIR}/${LIBRARY})
-                target_link_libraries(${TARGET} ${LIB_DIR}/${LIBRARY})
+                list(APPEND OUT_LIST ${LIB_DIR}/${LIBRARY})
                 set(${LIBRARY}_LINKED TRUE)
             elseif(EXISTS ${LIB_DIR}/${LIBRARY}.a)
-                target_link_libraries(${TARGET} ${LIB_DIR}/${LIBRARY}.a)
+                list(APPEND OUT_LIST ${LIB_DIR}/${LIBRARY}.a)
                 set(${LIBRARY}_LINKED TRUE)
             elseif(EXISTS ${LIB_DIR}/${LIBRARY}.so)
-                target_link_libraries(${TARGET} ${LIB_DIR}/${LIBRARY}.so)
+                list(APPEND OUT_LIST ${LIB_DIR}/${LIBRARY}.so)
                 set(${LIBRARY}_LINKED TRUE)
             elseif(EXISTS ${LIB_DIR}/lib${LIBRARY})
-                target_link_libraries(${TARGET} ${LIB_DIR}/lib${LIBRARY})
+                list(APPEND OUT_LIST ${LIB_DIR}/lib${LIBRARY})
                 set(${LIBRARY}_LINKED TRUE)
             elseif(EXISTS ${LIB_DIR}/lib${LIBRARY}.a)
-                target_link_libraries(${TARGET} ${LIB_DIR}/lib${LIBRARY}.a)
+                list(APPEND OUT_LIST ${LIB_DIR}/lib${LIBRARY}.a)
                 set(${LIBRARY}_LINKED TRUE)
             elseif(EXISTS ${LIB_DIR}/lib${LIBRARY}.so)
-                target_link_libraries(${TARGET} ${LIB_DIR}/lib${LIBRARY}.so)
+                list(APPEND OUT_LIST ${LIB_DIR}/lib${LIBRARY}.so)
                 set(${LIBRARY}_LINKED TRUE)
+            endif()
+
+            # library is found, no need to search further
+            if(${${LIBRARY}_LINKED} STREQUAL TRUE)
+                break()
             endif()
         endforeach()
 
@@ -68,6 +75,8 @@ function(auto_target_link_libraries TARGET)
             message(FATAL_ERROR "Cannot find library ${LIBRARY}.")
         endif()
     endforeach()
+
+    set(${OUT_VAR} ${OUT_LIST} PARENT_SCOPE)
 endfunction()
 
 
