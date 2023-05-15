@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.24.2)
 
 function(find_libraries OUT_VAR)
 
-    unset(OUT_LIST)
+    unset(LIBRARIES_LIST)
 
     foreach(LIBRARY IN ITEMS ${ARGN})
 
@@ -12,14 +12,14 @@ function(find_libraries OUT_VAR)
 
         if(EXISTS ${LIBRARY})
             # checking absolute path
-            list(APPEND OUT_LIST ${LIBRARY})
+            list(APPEND LIBRARIES_LIST ${LIBRARY})
             set(${LIBRARY}_LINKED TRUE)
         else()
             # checking if pkg-config can find it
             find_package(PkgConfig)
             pkg_check_modules(LIB_${LIBRARY} QUIET ${LIBRARY})
             if(DEFINED LIB_${LIBRARY}_LIBRARIES)
-                list(APPEND OUT_LIST ${LIB_${LIBRARY}_LIBRARIES})
+                list(APPEND LIBRARIES_LIST ${LIB_${LIBRARY}_LIBRARIES})
                 set(${LIBRARY}_LINKED TRUE)
             endif()
         endif()
@@ -45,22 +45,22 @@ function(find_libraries OUT_VAR)
         foreach(LIB_DIR IN ITEMS ${LIBRARY_SEARCH_DIRECTORIES})
 
             if(EXISTS ${LIB_DIR}/${LIBRARY})
-                list(APPEND OUT_LIST ${LIB_DIR}/${LIBRARY})
+                list(APPEND LIBRARIES_LIST ${LIB_DIR}/${LIBRARY})
                 set(${LIBRARY}_LINKED TRUE)
             elseif(EXISTS ${LIB_DIR}/${LIBRARY}.a)
-                list(APPEND OUT_LIST ${LIB_DIR}/${LIBRARY}.a)
+                list(APPEND LIBRARIES_LIST ${LIB_DIR}/${LIBRARY}.a)
                 set(${LIBRARY}_LINKED TRUE)
             elseif(EXISTS ${LIB_DIR}/${LIBRARY}.so)
-                list(APPEND OUT_LIST ${LIB_DIR}/${LIBRARY}.so)
+                list(APPEND LIBRARIES_LIST ${LIB_DIR}/${LIBRARY}.so)
                 set(${LIBRARY}_LINKED TRUE)
             elseif(EXISTS ${LIB_DIR}/lib${LIBRARY})
-                list(APPEND OUT_LIST ${LIB_DIR}/lib${LIBRARY})
+                list(APPEND LIBRARIES_LIST ${LIB_DIR}/lib${LIBRARY})
                 set(${LIBRARY}_LINKED TRUE)
             elseif(EXISTS ${LIB_DIR}/lib${LIBRARY}.a)
-                list(APPEND OUT_LIST ${LIB_DIR}/lib${LIBRARY}.a)
+                list(APPEND LIBRARIES_LIST ${LIB_DIR}/lib${LIBRARY}.a)
                 set(${LIBRARY}_LINKED TRUE)
             elseif(EXISTS ${LIB_DIR}/lib${LIBRARY}.so)
-                list(APPEND OUT_LIST ${LIB_DIR}/lib${LIBRARY}.so)
+                list(APPEND LIBRARIES_LIST ${LIB_DIR}/lib${LIBRARY}.so)
                 set(${LIBRARY}_LINKED TRUE)
             endif()
 
@@ -76,7 +76,7 @@ function(find_libraries OUT_VAR)
         endif()
     endforeach()
 
-    set(${OUT_VAR} ${OUT_LIST} PARENT_SCOPE)
+    set(${OUT_VAR} ${LIBRARIES_LIST} PARENT_SCOPE)
 endfunction()
 
 
