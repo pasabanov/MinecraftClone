@@ -11,7 +11,7 @@ function(find_libraries OUT_VAR)
         set(${LIBRARY}_LINKED FALSE)
 
         if(EXISTS ${LIBRARY})
-            # checking absolute path
+            # checking absolute or relative to project path
             list(APPEND LIBRARIES_LIST ${LIBRARY})
             set(${LIBRARY}_LINKED TRUE)
         else()
