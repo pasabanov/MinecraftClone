@@ -81,18 +81,24 @@ endfunction()
 
 
 
-# Set include, source, test, resource and out directories
+# Set include, source, test, resource and out directories.
 # !!! CMAKE_ARCHIVE_OUTPUT_DIRECTORY must be set before this function !!!
-function(set_project_directories INCLUDE_DIR SOURCE_DIR TEST_DIR RESOURCE_DIR LIB_DIR OUT_DIR)
+# Creates variables in the parent scope:
+#       HEADER_DIR,     HEADER_FILES    - directory with header files, corresponding files list
+#       SOURCE_DIR,     SOURCE_FILES    - directory with .cpp (.cc) files, corresponding files list
+#       TEST_DIR,       TEST_FILES      - directory with test files, corresponding files list
+#       RESOURCE_DIR,   RESOURCE_FILES  - directory with resource files, corresponding files list
+#       INCLUDE_DIR,    INCLUDE_FILES   - directory with headers that this project includes, corresponding files list
+#       LIB_DIR,        LIB_FILES       - directory with library files, corresponding files list
+#       OUT_DIR                         - directory with compiler output
+# OUT_DIR is used for all output directories of the compiler
+function(set_project_directories HEADER_DIR SOURCE_DIR TEST_DIR RESOURCE_DIR INCLUDE_DIR LIB_DIR OUT_DIR)
 
-    set(INCLUDE_DIR ${INCLUDE_DIR} PARENT_SCOPE)
-    set(SOURCE_DIR ${SOURCE_DIR} PARENT_SCOPE)
-    set(TEST_DIR ${TEST_DIR} PARENT_SCOPE)
-    set(RESOURCE_DIR ${RESOURCE_DIR} PARENT_SCOPE)
-    set(LIB_DIR ${LIB_DIR} PARENT_SCOPE)
+    include_directories(${HEADER_DIR} ${INCLUDE_DIR})
 
-    if(NOT INCLUDE_DIR STREQUAL "")
-        file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS ${INCLUDE_DIR}/*.h ${INCLUDE_DIR}/*.hh ${INCLUDE_DIR}/*.hpp)
+    # index files
+    if(NOT HEADER_DIR STREQUAL "")
+        file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS ${HEADER_DIR}/*.h ${HEADER_DIR}/*.hh ${HEADER_DIR}/*.hpp)
     endif()
     if(NOT SOURCE_DIR STREQUAL "")
         file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS ${SOURCE_DIR}/*.cpp ${SOURCE_DIR}/*.cc)
@@ -103,18 +109,14 @@ function(set_project_directories INCLUDE_DIR SOURCE_DIR TEST_DIR RESOURCE_DIR LI
     if(NOT RESOURCE_DIR STREQUAL "")
         file(GLOB_RECURSE RESOURCE_FILES CONFIGURE_DEPENDS ${RESOURCE_DIR}/*)
     endif()
+    if(NOT INCLUDE_DIR STREQUAL "")
+        file(GLOB_RECURSE INCLUDE_FILES CONFIGURE_DEPENDS ${INCLUDE_DIR}/*.h ${INCLUDE_DIR}/*.hh ${INCLUDE_DIR}/*.hpp)
+    endif()
     if(NOT LIB_DIR STREQUAL "")
-        file(GLOB_RECURSE LIB_FILES CONFIGURE_DEPENDS ${LIB_DIR}/*)
+        file(GLOB_RECURSE LIB_FILES CONFIGURE_DEPENDS ${LIB_DIR}/*.a ${LIB_DIR}/*.so)
     endif()
 
-    set(HEADERS ${HEADERS} PARENT_SCOPE)
-    set(SOURCE_FILES ${SOURCE_FILES} PARENT_SCOPE)
-    set(TEST_FILES ${TEST_FILES} PARENT_SCOPE)
-    set(RESOURCE_FILES ${RESOURCE_FILES} PARENT_SCOPE)
-    set(LIB_FILES ${LIB_FILES} PARENT_SCOPE)
-
-    include_directories(${INCLUDE_DIR})
-
+    # set out directory and create it
     set(OUT_DIR ${OUT_DIR} PARENT_SCOPE)
     if(IS_ABSOLUTE ${OUT_DIR})
         set(ABSOLUTE_OUT_DIR ${OUT_DIR})
@@ -127,5 +129,20 @@ function(set_project_directories INCLUDE_DIR SOURCE_DIR TEST_DIR RESOURCE_DIR LI
     set(CMAKE_PDB_OUTPUT_DIRECTORY ${ABSOLUTE_OUT_DIR} PARENT_SCOPE)
     set(CMAKE_COMPILE_PDB_OUTPUT_DIRECTORY ${ABSOLUTE_OUT_DIR} PARENT_SCOPE)
     execute_process(COMMAND mkdir -p ${ABSOLUTE_OUT_DIR}/)
+
+    # set variables in the parent scope
+    set(HEADER_DIR ${HEADER_DIR} PARENT_SCOPE)
+    set(SOURCE_DIR ${SOURCE_DIR} PARENT_SCOPE)
+    set(TEST_DIR ${TEST_DIR} PARENT_SCOPE)
+    set(RESOURCE_DIR ${RESOURCE_DIR} PARENT_SCOPE)
+    set(INCLUDE_DIR ${INCLUDE_DIR} PARENT_SCOPE)
+    set(LIB_DIR ${LIB_DIR} PARENT_SCOPE)
+
+    set(HEADER_FILES ${HEADER_FILES} PARENT_SCOPE)
+    set(SOURCE_FILES ${SOURCE_FILES} PARENT_SCOPE)
+    set(TEST_FILES ${TEST_FILES} PARENT_SCOPE)
+    set(RESOURCE_FILES ${RESOURCE_FILES} PARENT_SCOPE)
+    set(INCLUDE_FILES ${INCLUDE_FILES} PARENT_SCOPE)
+    set(LIB_FILES ${LIB_FILES} PARENT_SCOPE)
 
 endfunction()
