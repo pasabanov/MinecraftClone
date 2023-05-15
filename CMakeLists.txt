@@ -20,7 +20,6 @@ auto_target_link_libraries(${EXECUTABLE_NAME} gl opengl glfw3 glew SOIL)
 
 # Copy resources
 # create symbolic link
-get_filename_component(RESOURCE_DIR_NAME ${RESOURCE_DIR} NAME)
-execute_process(COMMAND ln -sfT ${PROJECT_SOURCE_DIR}/${RESOURCE_DIR_NAME}/ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${RESOURCE_DIR_NAME})
+execute_process(COMMAND ln -sfT ${PROJECT_SOURCE_DIR}/${RESOURCE_DIR}/ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${RESOURCE_DIR})
 # actual copy
-#execute_process(COMMAND cp -r ${PROJECT_SOURCE_DIR}/${RESOURCE_DIR_NAME}/ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+#execute_process(COMMAND cp -r ${PROJECT_SOURCE_DIR}/${RESOURCE_DIR}/ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
