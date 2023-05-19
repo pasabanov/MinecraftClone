@@ -98,22 +98,29 @@ function(set_project_directories HEADER_DIR SOURCE_DIR TEST_DIR RESOURCE_DIR INC
 
     # index files
     if(NOT HEADER_DIR STREQUAL "")
-        file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS ${HEADER_DIR}/*.h ${HEADER_DIR}/*.hh ${HEADER_DIR}/*.hpp)
+        file(GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS
+                ${HEADER_DIR}/*.h ${HEADER_DIR}/*.hh ${HEADER_DIR}/*.hpp ${HEADER_DIR}/*.hxx)
     endif()
     if(NOT SOURCE_DIR STREQUAL "")
-        file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS ${SOURCE_DIR}/*.cpp ${SOURCE_DIR}/*.cc)
+        file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS
+                ${SOURCE_DIR}/*.cpp ${SOURCE_DIR}/*.cc ${SOURCE_DIR}/*.cxx)
     endif()
     if(NOT TEST_DIR STREQUAL "")
-        file(GLOB_RECURSE TEST_FILES CONFIGURE_DEPENDS ${TEST_DIR}/*.cpp ${TEST_DIR}/*.cc ${TEST_DIR}/*.h ${TEST_DIR}/*.hh ${TEST_DIR}/*.hpp)
+        file(GLOB_RECURSE TEST_FILES CONFIGURE_DEPENDS
+                ${TEST_DIR}/*.cpp ${TEST_DIR}/*.cc ${TEST_DIR}/*.cxx
+                ${TEST_DIR}/*.h ${TEST_DIR}/*.hh ${TEST_DIR}/*.hpp ${TEST_DIR}/*.hxx)
     endif()
     if(NOT RESOURCE_DIR STREQUAL "")
-        file(GLOB_RECURSE RESOURCE_FILES CONFIGURE_DEPENDS ${RESOURCE_DIR}/*)
+        file(GLOB_RECURSE RESOURCE_FILES CONFIGURE_DEPENDS
+                ${RESOURCE_DIR}/*)
     endif()
     if(NOT INCLUDE_DIR STREQUAL "")
-        file(GLOB_RECURSE INCLUDE_FILES CONFIGURE_DEPENDS ${INCLUDE_DIR}/*.h ${INCLUDE_DIR}/*.hh ${INCLUDE_DIR}/*.hpp)
+        file(GLOB_RECURSE INCLUDE_FILES CONFIGURE_DEPENDS
+                ${INCLUDE_DIR}/*.h ${INCLUDE_DIR}/*.hh ${INCLUDE_DIR}/*.hpp ${INCLUDE_DIR}/*.hxx)
     endif()
     if(NOT LIB_DIR STREQUAL "")
-        file(GLOB_RECURSE LIB_FILES CONFIGURE_DEPENDS ${LIB_DIR}/*.a ${LIB_DIR}/*.so)
+        file(GLOB_RECURSE LIB_FILES CONFIGURE_DEPENDS
+                ${LIB_DIR}/*.a ${LIB_DIR}/*.so)
     endif()
 
     # set out directory and create it
