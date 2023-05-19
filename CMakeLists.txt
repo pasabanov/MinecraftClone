@@ -11,7 +11,7 @@ set_project_directories(src src test res include lib out)
 
 # EXECUTABLE
 set(EXECUTABLE_NAME ${CMAKE_PROJECT_NAME})
-add_executable(${EXECUTABLE_NAME} ${HEADERS} ${SOURCE_FILES})
+add_executable(${EXECUTABLE_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 
 
 # LIBRARIES
