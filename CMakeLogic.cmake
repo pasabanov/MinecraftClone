@@ -103,11 +103,11 @@ function(set_project_directories HEADER_DIR SOURCE_DIR TEST_DIR RESOURCE_DIR INC
     endif()
     if(NOT SOURCE_DIR STREQUAL "")
         file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS
-                ${SOURCE_DIR}/*.cpp ${SOURCE_DIR}/*.cc ${SOURCE_DIR}/*.cxx)
+                ${SOURCE_DIR}/*.c ${SOURCE_DIR}/*.cc ${SOURCE_DIR}/*.cpp ${SOURCE_DIR}/*.cxx)
     endif()
     if(NOT TEST_DIR STREQUAL "")
         file(GLOB_RECURSE TEST_FILES CONFIGURE_DEPENDS
-                ${TEST_DIR}/*.cpp ${TEST_DIR}/*.cc ${TEST_DIR}/*.cxx
+                ${TEST_DIR}/*.c ${TEST_DIR}/*.cc ${TEST_DIR}/*.cpp ${TEST_DIR}/*.cxx
                 ${TEST_DIR}/*.h ${TEST_DIR}/*.hh ${TEST_DIR}/*.hpp ${TEST_DIR}/*.hxx)
     endif()
     if(NOT RESOURCE_DIR STREQUAL "")
