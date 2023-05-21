@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.24.2)
 project(Minecraft)
 set(CMAKE_CXX_STANDARD 20)
 
-include(CMakeLogic.cmake)
+include(ConfigFunctions.cmake)
 
 
 # DIRECTORIES

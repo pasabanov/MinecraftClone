@@ -2,12 +2,15 @@ cmake_minimum_required(VERSION 3.24.2)
 
 
 
+# Returns list of libraries in a variable with name stored in OUT_VAR.
 function(find_libraries OUT_VAR)
 
+    # making empty list
     unset(LIBRARIES_LIST)
 
     foreach(LIBRARY IN ITEMS ${ARGN})
 
+        # making a unique variable for every library just in case
         set(${LIBRARY}_LINKED FALSE)
 
         if(EXISTS ${LIBRARY})
@@ -25,13 +28,13 @@ function(find_libraries OUT_VAR)
         endif()
 
         # library is found, no need to search further
-        if(${${LIBRARY}_LINKED} STREQUAL TRUE)
+        if(${${LIBRARY}_LINKED} STREQUAL "TRUE")
             continue()
         endif()
 
         # directories to search
         set(LIBRARY_SEARCH_DIRECTORIES ${CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES})
-        # searching in project directory too
+        # searching in project and some other directories too
         list(APPEND LIBRARY_SEARCH_DIRECTORIES
                 ${PROJECT_SOURCE_DIR}
                 ${PROJECT_SOURCE_DIR}/lib ${PROJECT_SOURCE_DIR}/libs
@@ -65,17 +68,18 @@ function(find_libraries OUT_VAR)
             endif()
 
             # library is found, no need to search further
-            if(${${LIBRARY}_LINKED} STREQUAL TRUE)
+            if(${${LIBRARY}_LINKED} STREQUAL "TRUE")
                 break()
             endif()
         endforeach()
 
         # library not found
-        if(NOT ${${LIBRARY}_LINKED} STREQUAL TRUE)
+        if(NOT ${${LIBRARY}_LINKED} STREQUAL "TRUE")
             message(FATAL_ERROR "Cannot find library ${LIBRARY}.")
         endif()
     endforeach()
 
+    # returning libraries list
     set(${OUT_VAR} ${LIBRARIES_LIST} PARENT_SCOPE)
 endfunction()
 
