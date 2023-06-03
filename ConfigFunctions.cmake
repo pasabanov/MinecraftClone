@@ -1,14 +1,27 @@
 cmake_minimum_required(VERSION 3.24.2)
+# VERSION 0.9
+# TODO Windows and MacOS support
 
 
 
 # Returns list of libraries in a variable with name stored in OUT_VAR.
+# Has the following options:
+#       REQUIRED - if defined the function will produce en error, otherwise won't.
+#       QUIT     - if defined the function will not message if a library not found, otherwise will.
 function(find_libraries OUT_VAR)
+
+    set(options REQUIRED QUIET)
+    cmake_parse_arguments(OPTION "${options}" "" "" "${ARGN}")
 
     # making empty list
     unset(LIBRARIES_LIST)
 
     foreach(LIBRARY IN ITEMS ${ARGN})
+
+        # continue if encountered option - not a library
+        if(${LIBRARY} IN_LIST options)
+            continue()
+        endif()
 
         # making a unique variable for every library just in case
         set(${LIBRARY}_LINKED FALSE)
@@ -21,7 +34,7 @@ function(find_libraries OUT_VAR)
             # checking if pkg-config can find it
             find_package(PkgConfig)
             pkg_check_modules(LIB_${LIBRARY} QUIET ${LIBRARY})
-            if(DEFINED LIB_${LIBRARY}_LIBRARIES)
+            if(DEFINED LIB_${LIBRARY}_LIBRARIES AND NOT LIB_${LIBRARY}_LIBRARIES STREQUAL "")
                 list(APPEND LIBRARIES_LIST ${LIB_${LIBRARY}_LIBRARIES})
                 set(${LIBRARY}_LINKED TRUE)
             endif()
@@ -75,7 +88,11 @@ function(find_libraries OUT_VAR)
 
         # library not found
         if(NOT ${${LIBRARY}_LINKED} STREQUAL "TRUE")
-            message(FATAL_ERROR "Cannot find library ${LIBRARY}.")
+            if(${OPTION_REQUIRED} STREQUAL "TRUE")
+                message(FATAL_ERROR "Cannot find library ${LIBRARY}.")
+            elseif(NOT ${OPTION_QUIET} STREQUAL "TRUE")
+                message("find_libraries: Cannot find library ${LIBRARY}.")
+            endif()
         endif()
     endforeach()
 

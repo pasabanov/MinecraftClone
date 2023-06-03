@@ -11,7 +11,6 @@ class ChunkHeap {
     uint mWidth, mHeight, mLength;
     std::vector<Chunk> mChunks;
 
-
 public:
 
     static void normalizeCoords(int& chX, int& chY, int& chZ, int& x, int& y, int& z);

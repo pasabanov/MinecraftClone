@@ -15,7 +15,7 @@ add_executable(${EXECUTABLE_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 
 
 # LIBRARIES
-find_libraries(LIBRARIES gl opengl glfw3 glew SOIL)
+find_libraries(LIBRARIES REQUIRED gl opengl glfw3 glew SOIL)
 target_link_libraries(${EXECUTABLE_NAME} PRIVATE ${LIBRARIES})
 
 
