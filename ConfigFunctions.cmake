@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24.2)
-# VERSION 0.9
+# VERSION 0.9.1
 # TODO Windows and MacOS support
 
 
@@ -12,36 +12,32 @@ function(find_libraries OUT_VAR)
 
     set(options REQUIRED QUIET)
     cmake_parse_arguments(OPTION "${options}" "" "" "${ARGN}")
+    list(REMOVE_ITEM ARGN ${options})
 
     # making empty list
     unset(LIBRARIES_LIST)
 
     foreach(LIBRARY IN ITEMS ${ARGN})
 
-        # continue if encountered option - not a library
-        if(${LIBRARY} IN_LIST options)
-            continue()
-        endif()
-
         # making a unique variable for every library just in case
-        set(${LIBRARY}_LINKED FALSE)
+        set(${LIBRARY}_FOUND FALSE)
 
         if(EXISTS ${LIBRARY})
             # checking absolute or relative to project path
             list(APPEND LIBRARIES_LIST ${LIBRARY})
-            set(${LIBRARY}_LINKED TRUE)
+            set(${LIBRARY}_FOUND TRUE)
         else()
             # checking if pkg-config can find it
             find_package(PkgConfig)
             pkg_check_modules(LIB_${LIBRARY} QUIET ${LIBRARY})
             if(DEFINED LIB_${LIBRARY}_LIBRARIES AND NOT LIB_${LIBRARY}_LIBRARIES STREQUAL "")
                 list(APPEND LIBRARIES_LIST ${LIB_${LIBRARY}_LIBRARIES})
-                set(${LIBRARY}_LINKED TRUE)
+                set(${LIBRARY}_FOUND TRUE)
             endif()
         endif()
 
         # library is found, no need to search further
-        if(${${LIBRARY}_LINKED} STREQUAL "TRUE")
+        if(${${LIBRARY}_FOUND} STREQUAL "TRUE")
             continue()
         endif()
 
@@ -62,35 +58,35 @@ function(find_libraries OUT_VAR)
 
             if(EXISTS ${LIB_DIR}/${LIBRARY})
                 list(APPEND LIBRARIES_LIST ${LIB_DIR}/${LIBRARY})
-                set(${LIBRARY}_LINKED TRUE)
+                set(${LIBRARY}_FOUND TRUE)
             elseif(EXISTS ${LIB_DIR}/${LIBRARY}.a)
                 list(APPEND LIBRARIES_LIST ${LIB_DIR}/${LIBRARY}.a)
-                set(${LIBRARY}_LINKED TRUE)
+                set(${LIBRARY}_FOUND TRUE)
             elseif(EXISTS ${LIB_DIR}/${LIBRARY}.so)
                 list(APPEND LIBRARIES_LIST ${LIB_DIR}/${LIBRARY}.so)
-                set(${LIBRARY}_LINKED TRUE)
+                set(${LIBRARY}_FOUND TRUE)
             elseif(EXISTS ${LIB_DIR}/lib${LIBRARY})
                 list(APPEND LIBRARIES_LIST ${LIB_DIR}/lib${LIBRARY})
-                set(${LIBRARY}_LINKED TRUE)
+                set(${LIBRARY}_FOUND TRUE)
             elseif(EXISTS ${LIB_DIR}/lib${LIBRARY}.a)
                 list(APPEND LIBRARIES_LIST ${LIB_DIR}/lib${LIBRARY}.a)
-                set(${LIBRARY}_LINKED TRUE)
+                set(${LIBRARY}_FOUND TRUE)
             elseif(EXISTS ${LIB_DIR}/lib${LIBRARY}.so)
                 list(APPEND LIBRARIES_LIST ${LIB_DIR}/lib${LIBRARY}.so)
-                set(${LIBRARY}_LINKED TRUE)
+                set(${LIBRARY}_FOUND TRUE)
             endif()
 
             # library is found, no need to search further
-            if(${${LIBRARY}_LINKED} STREQUAL "TRUE")
+            if(${${LIBRARY}_FOUND} STREQUAL "TRUE")
                 break()
             endif()
         endforeach()
 
         # library not found
-        if(NOT ${${LIBRARY}_LINKED} STREQUAL "TRUE")
+        if(NOT ${${LIBRARY}_FOUND} STREQUAL "TRUE")
             if(${OPTION_REQUIRED} STREQUAL "TRUE")
                 message(FATAL_ERROR "Cannot find library ${LIBRARY}.")
-            elseif(NOT ${OPTION_QUIET} STREQUAL "TRUE")
+            elseif(${OPTION_QUIET} STREQUAL "FALSE")
                 message("find_libraries: Cannot find library ${LIBRARY}.")
             endif()
         endif()
