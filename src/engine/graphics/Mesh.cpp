@@ -1,13 +1,9 @@
 #include <engine/graphics/Mesh.h>
 
-
-
 void Mesh::glDelete() {
     glDeleteVertexArrays(1, &mVAO);
     glDeleteBuffers(1, &mVBO);
 }
-
-
 
 Mesh::Mesh() {}
 
@@ -15,20 +11,16 @@ Mesh::Mesh(const float* buffer, uint verticesCount, const int* attrs) {
     create(buffer, verticesCount, attrs);
 }
 
-Mesh::Mesh(Mesh&& other)
+Mesh::Mesh(Mesh&& other) noexcept
 : mVAO(other.mVAO), mVBO(other.mVBO), mVerticesCount(other.mVerticesCount) {
     other.mVAO = other.mVBO = other.mVerticesCount = GL_NONE;
 }
-
-
 
 Mesh::~Mesh() {
     glDelete();
 }
 
-
-
-Mesh& Mesh::operator=(Mesh&& other) {
+Mesh& Mesh::operator=(Mesh&& other) noexcept {
 
     glDelete();
 
@@ -41,15 +33,11 @@ Mesh& Mesh::operator=(Mesh&& other) {
     return *this;
 }
 
-
-
 void Mesh::draw(uint primitive) const {
     glBindVertexArray(mVAO);
     glDrawArrays(primitive, 0, mVerticesCount);
     glBindVertexArray(GL_NONE);
 }
-
-
 
 void Mesh::create(const float* buffer, uint verticesCount, const int* attrs) {
 

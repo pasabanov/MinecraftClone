@@ -1,7 +1,5 @@
 #include <engine/voxel/ChunkHeap.h>
 
-
-
 void ChunkHeap::normalizeCoords(int& chX, int& chY, int& chZ, int& x, int& y, int& z) {
     chX += x / Chunk::WIDTH;
     x %= Chunk::WIDTH;
@@ -22,8 +20,6 @@ void ChunkHeap::normalizeCoords(int& chX, int& chY, int& chZ, int& x, int& y, in
         z += Chunk::LENGTH;
     }
 }
-
-
 
 ChunkHeap::ChunkHeap(uint width, uint height, uint length)
 : mWidth(width), mHeight(height), mLength(length), mChunks(0) {
@@ -60,8 +56,6 @@ ChunkHeap::ChunkHeap(uint width, uint height, uint length)
     }
 }
 
-
-
 uint ChunkHeap::getWidth() const {
     return mWidth;
 }
@@ -78,8 +72,6 @@ uint ChunkHeap::getVolume() const {
     return mChunks.size();
 }
 
-
-
 Chunk& ChunkHeap::getChunk(int x, int y, int z) {
     return mChunks[(y * mLength + z) * mWidth + x];
 }
@@ -92,8 +84,6 @@ void ChunkHeap::setChunk(int x, int y, int z, const Chunk& chunk) {
     mChunks[(y * mLength + z) * mWidth + x] = chunk;
 }
 
-
-
 Chunk* ChunkHeap::getChunkPtrByVoxel(int x, int y, int z) {
     int chX = 0, chY = 0, chZ = 0;
     normalizeCoords(chX, chY, chZ, x, y, z);
@@ -101,8 +91,6 @@ Chunk* ChunkHeap::getChunkPtrByVoxel(int x, int y, int z) {
         return &getChunk(chX, chY, chZ);
     return nullptr;
 }
-
-
 
 uchar ChunkHeap::getLight(int x, int y, int z, int channel) const {
     int chX = 0, chY = 0, chZ = 0;
@@ -145,13 +133,9 @@ void ChunkHeap::setLight(int x, int y, int z, int channel, int value) {
             getChunk(chX, chY, chZ + 1).setModified(true);
 }
 
-
-
 bool ChunkHeap::chunkExists(int chX, int chY, int chZ) const {
     return chX >= 0 && chX < mWidth && chY >= 0 && chY < mHeight && chZ >= 0 && chZ < mLength;
 }
-
-
 
 bool ChunkHeap::voxelExists(int chX, int chY, int chZ, int x, int y, int z) const {
     normalizeCoords(chX, chY, chZ, x, y, z);
@@ -170,8 +154,6 @@ bool ChunkHeap::voxelNotNull(int chX, int chY, int chZ, int x, int y, int z) con
 bool ChunkHeap::voxelNotNull_safe(int chX, int chY, int chZ, int x, int y, int z) const {
     return voxelExists_safe(chX, chY, chZ, x, y, z) && getChunk(chX, chY, chZ).getVoxel(x, y, z).getId() != 0;
 }
-
-
 
 Voxel& ChunkHeap::getVoxelGlobal(int x, int y, int z) {
     int chX = 0, chY = 0, chZ = 0;
@@ -223,8 +205,6 @@ void ChunkHeap::setVoxelGlobal(int x, int y, int z, const Voxel& newVoxel) {
         if (chunkExists(chX, chY, chZ + 1))
             getChunk(chX, chY, chZ + 1).setModified(true);
 }
-
-
 
 Voxel* ChunkHeap::rayCast(
         const glm::vec3& a,
@@ -336,13 +316,9 @@ Voxel* ChunkHeap::rayCast(
     return nullptr;
 }
 
-
-
 int ChunkHeap::coordsToIndex(int x, int y, int z) const {
     return (y * mLength + z) * mWidth + x;
 }
-
-
 
 Chunk& ChunkHeap::getChunk(int index) {
     return mChunks[index];

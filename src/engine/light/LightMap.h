@@ -1,5 +1,4 @@
-#ifndef MINECRAFT_LIGHTMAP_H
-#define MINECRAFT_LIGHTMAP_H
+#pragma once
 
 #include <headers/includes.h>
 
@@ -24,5 +23,3 @@ public:
     void setB(int x, int y, int z, int value);
     void setS(int x, int y, int z, int value);
 };
-
-#endif //MINECRAFT_LIGHTMAP_H

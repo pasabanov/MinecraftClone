@@ -1,5 +1,4 @@
-#ifndef MINECRAFT_VOXEL_H
-#define MINECRAFT_VOXEL_H
+#pragma once
 
 #include <headers/includes.h>
 
@@ -15,7 +14,5 @@ public:
     uint getId() const;
     void setId(uint id);
 
-    bool operator==(const Voxel& other);
+    bool operator==(const Voxel& other) const;
 };
-
-#endif //MINECRAFT_VOXEL_H

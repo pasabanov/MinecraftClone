@@ -1,9 +1,7 @@
-#ifndef MINECRAFT_WINDOW_H
-#define MINECRAFT_WINDOW_H
+#pragma once
 
 #include <headers/includes.h>
 
-#include <engine/window/Key.h>
 #include <engine/exception/MessageException.h>
 #include <engine/view/View.h>
 #include <engine/time/Clock.h>
@@ -86,5 +84,3 @@ public:
 
     void refresh();
 };
-
-#endif //MINECRAFT_WINDOW_H

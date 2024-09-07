@@ -1,5 +1,4 @@
-#ifndef MINECRAFT_MESH_H
-#define MINECRAFT_MESH_H
+#pragma once
 
 #include <headers/includes.h>
 
@@ -14,15 +13,13 @@ public:
 
     Mesh();
     Mesh(const float* buffer, uint verticesCount, const int* attrs);
-    Mesh(Mesh&& other);
+    Mesh(Mesh&& other) noexcept;
 
     ~Mesh();
 
-    Mesh& operator=(Mesh&& other);
+    Mesh& operator=(Mesh&& other) noexcept;
 
     void create(const float* buffer, uint verticesCount, const int* attrs);
 
     void draw(uint primitive = GL_TRIANGLES) const;
 };
-
-#endif //MINECRAFT_MESH_H

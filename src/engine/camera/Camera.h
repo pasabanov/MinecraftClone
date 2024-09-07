@@ -1,8 +1,6 @@
-#ifndef MINECRAFT_CAMERA_H
-#define MINECRAFT_CAMERA_H
+#pragma once
 
 #include <headers/includes.h>
-
 
 class Camera {
 
@@ -77,5 +75,3 @@ public:
     glm::mat4 getView() const;
     glm::mat4 getProjView() const;
 };
-
-#endif //MINECRAFT_CAMERA_H

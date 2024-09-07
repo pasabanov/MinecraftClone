@@ -1,5 +1,4 @@
-#ifndef MINECRAFT_SHADER_H
-#define MINECRAFT_SHADER_H
+#pragma once
 
 #include <headers/includes.h>
 
@@ -21,11 +20,11 @@ public:
     };
 
     explicit Shader(uint id = GL_NONE);
-    Shader(Shader&& other);
+    Shader(Shader&& other) noexcept;
 
     ~Shader();
 
-    Shader& operator=(Shader&& other);
+    Shader& operator=(Shader&& other) noexcept;
 
     void load(const std::string& vertexFilename, const std::string& fragmentFilename);
 
@@ -35,5 +34,3 @@ public:
 
     void use() const;
 };
-
-#endif //MINECRAFT_SHADER_H

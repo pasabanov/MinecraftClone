@@ -1,5 +1,4 @@
-#ifndef MINECRAFT_CHUNK_H
-#define MINECRAFT_CHUNK_H
+#pragma once
 
 #include <headers/includes.h>
 
@@ -50,5 +49,3 @@ public:
     const Voxel& getVoxel(int index) const;
     void setVoxel(int index, const Voxel& voxel);
 };
-
-#endif //MINECRAFT_CHUNK_H

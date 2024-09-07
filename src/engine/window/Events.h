@@ -1,5 +1,4 @@
-#ifndef MINECRAFT_EVENTS_H
-#define MINECRAFT_EVENTS_H
+#pragma once
 
 #include <headers/includes.h>
 
@@ -50,5 +49,3 @@ public:
     void toggleCursor();
     bool isCursorDisabled() const;
 };
-
-#endif //MINECRAFT_EVENTS_H

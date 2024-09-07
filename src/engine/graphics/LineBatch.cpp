@@ -1,7 +1,5 @@
 #include <engine/graphics/LineBatch.h>
 
-
-
 void LineBatch::line(const glm::vec3& start, const glm::vec3& end, const glm::vec4& color) {
 
     mBuffer.push_back(start.x);
@@ -20,8 +18,6 @@ void LineBatch::line(const glm::vec3& start, const glm::vec3& end, const glm::ve
     mBuffer.push_back(color.b);
     mBuffer.push_back(color.a);
 }
-
-
 
 void LineBatch::box(glm::vec3 pos, const glm::vec3& size, const glm::vec4& color) {
 
@@ -55,19 +51,13 @@ void LineBatch::box(glm::vec3 pos, const glm::vec3& size, const glm::vec4& color
     line(pos, pos - vecZ, color);
 }
 
-
-
 void LineBatch::clearBuffer() {
     mBuffer.resize(0);
 }
 
-
-
 void LineBatch::render() {
     mMesh.create(mBuffer.data(), mBuffer.size() / VERTEX_SIZE, VERTEX_ATTRS.data());
 }
-
-
 
 void LineBatch::draw() const {
     mMesh.draw(GL_LINES);

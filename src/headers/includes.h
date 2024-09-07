@@ -1,5 +1,4 @@
-#ifndef MINECRAFT_INCLUDES_H
-#define MINECRAFT_INCLUDES_H
+#pragma once
 
 // streams
 #include <iostream>
@@ -44,5 +43,3 @@
 
 // typedefs
 #include <headers/typedefs.h>
-
-#endif //MINECRAFT_INCLUDES_H

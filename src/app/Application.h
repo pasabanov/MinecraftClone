@@ -1,13 +1,6 @@
-#ifndef MINECRAFT_APPLICATION_H
-#define MINECRAFT_APPLICATION_H
-
-#include <headers/includes.h>
+#pragma once
 
 class Application {
-
 public:
-
-    inline static const char *const APP_NAME = "Minecraft";
+    inline static const char *const APP_NAME = "MinecraftClone";
 };
-
-#endif //MINECRAFT_APPLICATION_H

@@ -1,9 +1,6 @@
 #include <game/world/VoxelWorld.h>
 
-
-
 void VoxelWorld::initializeLight() {
-    
     for (int y = 0; y < mChunks.getHeight()*Chunk::HEIGHT; ++y) {
         for (int z = 0; z < mChunks.getLength()*Chunk::LENGTH; ++z) {
             for (int x = 0; x < mChunks.getWidth()*Chunk::WIDTH; ++x) {
@@ -55,8 +52,6 @@ void VoxelWorld::initializeLight() {
     mSolverS.solve();
 }
 
-
-
 VoxelWorld::VoxelWorld(int width, int height, int worldWidth, int worldHeight, int worldLength)
 : View(width, height), mRenderer{}, mChunks(worldWidth, worldHeight, worldLength)
 , mSolverR(&mChunks, 0), mSolverG(&mChunks, 1)
@@ -99,14 +94,10 @@ VoxelWorld::VoxelWorld(int width, int height, int worldWidth, int worldHeight, i
     initializeLight();
 }
 
-
-
 void VoxelWorld::onViewSizeChanged(int width, int height) {
     View::onViewSizeChanged(width, height);
     mCamera.setAspect(((float) width) / ((float) height));
 }
-
-
 
 void VoxelWorld::applyEvents(const Events& events, float elapsedTime) {
     View::applyEvents(events, elapsedTime);
@@ -242,13 +233,9 @@ void VoxelWorld::applyEvents(const Events& events, float elapsedTime) {
     mHighlighting.render();
 }
 
-
-
 void VoxelWorld::update() {
     mRenderer.render(mChunks, mMeshes);
 }
-
-
 
 void VoxelWorld::draw() const {
 
@@ -274,8 +261,6 @@ void VoxelWorld::draw() const {
     mLineShader.setProjView(projView);
     mHighlighting.draw();
 }
-
-
 
 void VoxelWorld::save(const std::string& filename) const {
     std::vector<uint> voxels (mChunks.getVolume() * Chunk::VOLUME);
