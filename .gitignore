@@ -2,6 +2,8 @@
 !/.idea/codeStyles/
 !/.idea/runConfigurations/
 !/.idea/cmake.xml
+!/.idea/editor.xml
+!/.idea/encodings.xml
 !/.idea/vcs.xml
 
 /.vscode/*
