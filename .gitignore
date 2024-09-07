@@ -1,6 +1,7 @@
 /.idea/*
 !/.idea/codeStyles/
 !/.idea/runConfigurations/
+!/.idea/cmake.xml
 !/.idea/vcs.xml
 
 /.vscode/*
