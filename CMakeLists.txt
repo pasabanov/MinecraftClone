@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.24.2)
-project(Minecraft)
+project(MinecraftClone)
 set(CMAKE_CXX_STANDARD 20)
 
-include(ConfigFunctions.cmake)
+include(Functions.cmake)
 
 
 # DIRECTORIES
