@@ -1,17 +1,11 @@
 #include <engine/window/Events.h>
 
-
-
 Events::Events() {}
-
-
 
 void Events::onNextFrame() {
     ++mCurrentFrame;
     mDeltaX = mDeltaY = 0;
 }
-
-
 
 bool Events::keyPressed(int keycode) const {
     try {
@@ -50,8 +44,6 @@ void Events::onKeyboardKeyAction(int keycode, int scancode, int action, int mode
     }
 }
 
-
-
 bool Events::buttonPressed(int button) const {
     try {
         return mButtons.at(button).pressed;
@@ -89,8 +81,6 @@ void Events::onMouseButtonAction(int button, int action, int mode) {
     }
 }
 
-
-
 double Events::getDeltaX() const {
     return mDeltaX;
 }
@@ -117,8 +107,6 @@ void Events::onCursorPositionChanged(double xpos, double ypos) {
     mX = xpos;
     mY = ypos;
 }
-
-
 
 void Events::disableCursor() {
     mCursorDisabled = true;

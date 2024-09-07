@@ -10,6 +10,8 @@
 /cmake-build-release/
 /cmake-build-relwithdebinfo/
 /cmake-build-minsizerel/
+/cmake-build-minsize/
 /cmake-build-default/
+/cmake-build*/
 /build/
 /out/

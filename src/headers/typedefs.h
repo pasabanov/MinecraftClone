@@ -1,5 +1,4 @@
-#ifndef MINECRAFT_TYPEDEFS_H
-#define MINECRAFT_TYPEDEFS_H
+#pragma once
 
 #include <cstdint>
 #include <cstdlib>
@@ -27,5 +26,3 @@ using float8 = double;
 using float64 = float8;
 using float10 = long double;
 using float80 = float10;
-
-#endif //MINECRAFT_TYPEDEFS_H

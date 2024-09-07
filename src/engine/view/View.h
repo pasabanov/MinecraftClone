@@ -1,10 +1,6 @@
-#ifndef MINECRAFT_VIEW_H
-#define MINECRAFT_VIEW_H
-
-#include <headers/includes.h>
+#pragma once
 
 #include <engine/window/Events.h>
-
 
 class View {
 
@@ -39,5 +35,3 @@ public:
 
     virtual void refresh();
 };
-
-#endif //MINECRAFT_VIEW_H

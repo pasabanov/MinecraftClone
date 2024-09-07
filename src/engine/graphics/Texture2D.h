@@ -1,5 +1,4 @@
-#ifndef MINECRAFT_TEXTURE2D_H
-#define MINECRAFT_TEXTURE2D_H
+#pragma once
 
 #include <headers/includes.h>
 
@@ -20,7 +19,7 @@ public:
     };
 
     Texture2D(uint id = GL_NONE, uint width = GL_NONE, uint height = GL_NONE);
-    Texture2D(Texture2D&& other);
+    Texture2D(Texture2D&& other) noexcept;
 
     ~Texture2D();
 
@@ -30,5 +29,3 @@ public:
 
     void bind() const;
 };
-
-#endif //MINECRAFT_TEXTURE2D_H

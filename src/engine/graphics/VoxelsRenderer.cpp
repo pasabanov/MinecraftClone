@@ -1,9 +1,6 @@
 #include <engine/graphics/VoxelsRenderer.h>
 
-
-
 void VoxelsRenderer::writeVertex(float x, float y, float z, float u, float v, float r, float g, float b, float s) {
-
     mBuffer.push_back(x);
     mBuffer.push_back(y);
     mBuffer.push_back(z);
@@ -17,11 +14,7 @@ void VoxelsRenderer::writeVertex(float x, float y, float z, float u, float v, fl
     mBuffer.push_back(s);
 }
 
-
-
 VoxelsRenderer::VoxelsRenderer(uint startCapacity) : mBuffer(startCapacity) {}
-
-
 
 Mesh VoxelsRenderer::render(const ChunkHeap& chunks, int chX, int chY, int chZ) {
 
@@ -280,8 +273,6 @@ Mesh VoxelsRenderer::render(const ChunkHeap& chunks, int chX, int chY, int chZ) 
     return mesh;
 }
 
-
-
 MeshHeap VoxelsRenderer::render(ChunkHeap& chunks) {
 
     MeshHeap meshes (chunks.getVolume());
@@ -291,10 +282,7 @@ MeshHeap VoxelsRenderer::render(ChunkHeap& chunks) {
     return meshes;
 }
 
-
-
 void VoxelsRenderer::render(ChunkHeap& chunks, MeshHeap& meshes) {
-
     for (int chY = 0; chY < chunks.getHeight(); ++chY) {
         for (int chZ = 0; chZ < chunks.getLength(); ++chZ) {
             for (int chX = 0; chX < chunks.getWidth(); ++chX) {

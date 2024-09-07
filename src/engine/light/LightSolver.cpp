@@ -1,16 +1,10 @@
 #include <engine/light/LightSolver.h>
 
-
-
 LightSolver::LightSolver(ChunkHeap* mChunks, int mChannel) : mChunks(mChunks), mChannel(mChannel) {}
-
-
 
 void LightSolver::add(int x, int y, int z) {
     add(x, y, z, mChunks->getLight(x, y, z, mChannel));
 }
-
-
 
 void LightSolver::add(int x, int y, int z, int emission) {
 
@@ -21,8 +15,6 @@ void LightSolver::add(int x, int y, int z, int emission) {
 
     mChunks->setLight(x, y, z, mChannel, emission);
 }
-
-
 
 void LightSolver::remove(int x, int y, int z) {
 
@@ -37,8 +29,6 @@ void LightSolver::remove(int x, int y, int z) {
 
     mChunks->setLight(x, y, z, mChannel, 0);
 }
-
-
 
 void LightSolver::solve() {
 

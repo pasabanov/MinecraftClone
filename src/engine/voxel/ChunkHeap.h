@@ -1,5 +1,4 @@
-#ifndef MINECRAFT_CHUNKHEAP_H
-#define MINECRAFT_CHUNKHEAP_H
+#pragma once
 
 #include <headers/includes.h>
 
@@ -57,5 +56,3 @@ public:
     const Chunk& getChunk(int index) const;
     void setChunk(int index, const Chunk& chunk);
 };
-
-#endif //MINECRAFT_CHUNKHEAP_H

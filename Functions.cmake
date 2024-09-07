@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.24.2)
 # VERSION 0.9.1
 # TODO Windows and MacOS support
 
-
-
 # Returns list of libraries in a variable with name stored in OUT_VAR.
 # Has the following options:
 #       REQUIRED - if defined the function will produce en error, otherwise won't.
@@ -95,8 +93,6 @@ function(find_libraries OUT_VAR)
     # returning libraries list
     set(${OUT_VAR} ${LIBRARIES_LIST} PARENT_SCOPE)
 endfunction()
-
-
 
 # Set include, source, test, resource and out directories.
 # !!! CMAKE_ARCHIVE_OUTPUT_DIRECTORY must be set before this function !!!

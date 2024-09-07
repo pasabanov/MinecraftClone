@@ -1,14 +1,10 @@
 #include <engine/camera/Camera.h>
 
-
-
 void Camera::updateVectors() {
     mFront = glm::vec3(mRotation * glm::vec4(0, 0, -1, 1));
     mRight = glm::vec3(mRotation * glm::vec4(-1, 0, 0, 1));
     mUp = glm::vec3(mRotation * glm::vec4(0, 1, 0, 1));
 }
-
-
 
 Camera::Camera(
         const glm::vec3& position,
@@ -27,8 +23,6 @@ Camera::Camera(
   mRotX(rotX), mRotY(rotY) {
     updateVectors();
 }
-
-
 
 void Camera::move(const glm::vec3& vec) {
     mPosition = vec;
@@ -49,8 +43,6 @@ void Camera::rotate(const glm::vec3& vec) {
     updateVectors();
 }
 
-
-
 const glm::vec3& Camera::getPosition() const {
     return mPosition;
 }
@@ -67,8 +59,6 @@ const glm::vec3& Camera::getRight() const {
     return mRight;
 }
 
-
-
 const glm::mat4& Camera::getRotation() const {
     return mRotation;
 }
@@ -76,8 +66,6 @@ const glm::mat4& Camera::getRotation() const {
 void Camera::setRotation(const glm::mat4& rotation) {
     mRotation = rotation;
 }
-
-
 
 float Camera::getAspect() const {
     return mAspect;
@@ -87,8 +75,6 @@ void Camera::setAspect(float aspect) {
     mAspect = aspect;
 }
 
-
-
 float Camera::getSpeed() const {
     return mSpeed;
 }
@@ -96,8 +82,6 @@ float Camera::getSpeed() const {
 void Camera::setSpeed(float speed) {
     mSpeed = speed;
 }
-
-
 
 float Camera::getSensX() const {
     return mSensX;
@@ -114,8 +98,6 @@ float Camera::getSensY() const {
 void Camera::setSensY(float sensY) {
     mSensY = sensY;
 }
-
-
 
 float Camera::getRotX() const {
     return mRotX;
@@ -141,8 +123,6 @@ void Camera::addRotY(float rotY) {
     mRotY += rotY;
 }
 
-
-
 float Camera::getZNear() const {
     return mZNear;
 }
@@ -158,8 +138,6 @@ float Camera::getZFar() const {
 void Camera::setZFar(float zFar) {
     mZFar = zFar;
 }
-
-
 
 glm::mat4 Camera::getProjection() const {
     return glm::perspective(mFieldOfView, mAspect, mZNear, mZFar);

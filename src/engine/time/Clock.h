@@ -1,8 +1,6 @@
-#ifndef MINECRAFT_CLOCK_H
-#define MINECRAFT_CLOCK_H
+#pragma once
 
 #include <headers/includes.h>
-
 
 class Clock {
 
@@ -27,5 +25,3 @@ public:
     float elapsedSecondsF(bool refresh = true);
     double elapsedSecondsD(bool refresh = true);
 };
-
-#endif //MINECRAFT_CLOCK_H

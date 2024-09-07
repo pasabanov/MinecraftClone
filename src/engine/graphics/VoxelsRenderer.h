@@ -1,5 +1,4 @@
-#ifndef MINECRAFT_VOXELSRENDERER_H
-#define MINECRAFT_VOXELSRENDERER_H
+#pragma once
 
 #include <headers/includes.h>
 
@@ -30,5 +29,3 @@ public:
 
     void render(ChunkHeap& chunks, MeshHeap& meshes);
 };
-
-#endif //MINECRAFT_VOXELSRENDERER_H

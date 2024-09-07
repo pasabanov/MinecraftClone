@@ -1,7 +1,5 @@
 #include <engine/window/Window.h>
 
-
-
 void Window::cursorPositionCallback(GLFWwindow* glwindow, double xpos, double ypos) {
     Window* window = sWindows[glwindow];
     if (window != nullptr)
@@ -25,8 +23,6 @@ void Window::windowSizeCallback(GLFWwindow* glwindow, int width, int height) {
     if (window != nullptr)
         window->onWindowSizeChanged(width, height);
 }
-
-
 
 void Window::onCursorPositionChanged(double xpos, double ypos) {
     mEvents.onCursorPositionChanged(xpos, ypos);
@@ -55,8 +51,6 @@ void Window::onWindowSizeChanged(int width, int height) {
         mView->onViewSizeChanged(width, height);
 }
 
-
-
 void Window::registerWindow() const {
     sWindows[mWindow] = const_cast<Window*>(this);
 }
@@ -65,19 +59,13 @@ void Window::unregisterWindow() const {
     sWindows.erase(mWindow);
 }
 
-
-
 void Window::setCursorMode(int mode) const {
     glfwSetInputMode(mWindow, GLFW_CURSOR, mode);
 }
 
-
-
 void Window::swapBuffers() const {
     glfwSwapBuffers(mWindow);
 }
-
-
 
 Window::Window(const std::string& title, int width, int height)
 : mTitle(title), mWidth(width), mHeight(height) {
@@ -112,14 +100,10 @@ Window::Window(const std::string& title, int width, int height)
     registerWindow();
 }
 
-
-
 Window::~Window() {
     unregisterWindow();
     glfwDestroyWindow(mWindow);
 }
-
-
 
 std::unique_ptr<View>& Window::getView() {
     return mView;
@@ -133,8 +117,6 @@ void Window::setView(std::unique_ptr<View>&& view) {
     mView = std::move(view);
 }
 
-
-
 bool Window::isShouldClose() const {
     return glfwWindowShouldClose(mWindow);
 }
@@ -142,8 +124,6 @@ bool Window::isShouldClose() const {
 void Window::setShouldClose(bool flag) {
     glfwSetWindowShouldClose(mWindow, flag);
 }
-
-
 
 void Window::pollEvents() {
     requestFocus();
@@ -153,8 +133,6 @@ void Window::pollEvents() {
         mView->applyEvents(mEvents, mClock.elapsedMillis());
 }
 
-
-
 bool Window::keyPressed(int keycode) const {
     return mEvents.keyPressed(keycode);
 }
@@ -163,8 +141,6 @@ bool Window::keyJustPressed(int keycode) const {
     return mEvents.keyJustPressed(keycode);
 }
 
-
-
 bool Window::buttonPressed(int button) const {
     return mEvents.buttonPressed(button);
 }
@@ -172,8 +148,6 @@ bool Window::buttonPressed(int button) const {
 bool Window::buttonJustPressed(int button) const {
     return mEvents.buttonJustPressed(button);
 }
-
-
 
 void Window::disableCursor() {
     mEvents.disableCursor();
@@ -194,8 +168,6 @@ bool Window::isCursorDisabled() const {
     return mEvents.isCursorDisabled();
 }
 
-
-
 int Window::getWidth() const {
     return mWidth;
 }
@@ -203,8 +175,6 @@ int Window::getWidth() const {
 int Window::getHeight() const {
     return mHeight;
 }
-
-
 
 const std::string& Window::getTitle() const {
     return mTitle;
@@ -215,20 +185,14 @@ void Window::setTitle(const std::string& title) {
     glfwSetWindowTitle(mWindow, title.c_str());
 }
 
-
-
 void Window::requestFocus() const {
     glfwMakeContextCurrent(mWindow);
 }
-
-
 
 void Window::fillColor(float red, float green, float blue, float alpha) {
     requestFocus();
     glClearColor(red, green, blue, alpha);
 }
-
-
 
 void Window::refresh() {
     requestFocus();

@@ -1,5 +1,4 @@
-#ifndef MINECRAFT_MESHHEAP_H
-#define MINECRAFT_MESHHEAP_H
+#pragma once
 
 #include <headers/includes.h>
 
@@ -12,7 +11,7 @@ class MeshHeap {
 
 public:
 
-    MeshHeap(int size);
+    explicit MeshHeap(int size);
 
     int size() const;
 
@@ -22,5 +21,3 @@ public:
     const Mesh& getMesh(int index) const;
     const glm::mat4& getModel(int index) const;
 };
-
-#endif //MINECRAFT_MESHHEAP_H

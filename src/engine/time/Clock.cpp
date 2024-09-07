@@ -1,12 +1,10 @@
 #include <engine/time/Clock.h>
 
-
 timespec currentTime() {
     timespec curTime { 0, 0 };
     clock_gettime(CLOCK_MONOTONIC, &curTime);
     return curTime;
 }
-
 
 timespec operator+(const timespec& start, const timespec& stop) {
     timespec result { stop.tv_sec + start.tv_sec, stop.tv_nsec + start.tv_nsec };
@@ -26,11 +24,9 @@ timespec operator-(const timespec& start, const timespec& stop) {
     return result;
 }
 
-
 Clock::Clock() {
     start();
 }
-
 
 void Clock::start() {
     mTime = currentTime();
@@ -40,7 +36,6 @@ void Clock::start() {
 void Clock::restart() {
     start();
 }
-
 
 void Clock::pause() {
     if (mIsPaused)
@@ -57,7 +52,6 @@ void Clock::resume() {
     mTime = mTime - curTime;
     mIsPaused = false;
 }
-
 
 long Clock::elapsedSeconds(bool refresh) {
     return elapsedNanos(refresh) / 1000000000L;
@@ -79,11 +73,10 @@ long Clock::elapsedNanos(bool refresh) {
     return elapsedTime.tv_sec * 1000000000L + elapsedTime.tv_nsec;
 }
 
-
 float Clock::elapsedSecondsF(bool refresh) {
-    return ((float) elapsedNanos(refresh)) / 1000000000.0f;
+    return static_cast<float>(elapsedNanos(refresh)) / 1000000000.0f;
 }
 
 double Clock::elapsedSecondsD(bool refresh) {
-    return ((double) elapsedNanos(refresh)) / 1000000000.0;
+    return static_cast<double>(elapsedNanos(refresh)) / 1000000000.0;
 }

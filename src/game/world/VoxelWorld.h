@@ -1,5 +1,4 @@
-#ifndef MINECRAFT_VOXELWORLD_H
-#define MINECRAFT_VOXELWORLD_H
+#pragma once
 
 #include <headers/includes.h>
 
@@ -60,5 +59,3 @@ public:
     void save(const std::string& filename) const;
     void load(const std::string& filename);
 };
-
-#endif //MINECRAFT_VOXELWORLD_H

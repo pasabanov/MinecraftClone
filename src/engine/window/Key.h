@@ -1,5 +1,4 @@
-#ifndef MINECRAFT_KEY_H
-#define MINECRAFT_KEY_H
+#pragma once
 
 #include <headers/includes.h>
 
@@ -8,5 +7,3 @@ public:
     bool pressed;
     uint frame;
 };
-
-#endif //MINECRAFT_KEY_H

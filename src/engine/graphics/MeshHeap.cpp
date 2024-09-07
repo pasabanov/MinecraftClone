@@ -1,16 +1,10 @@
 #include <engine/graphics/MeshHeap.h>
 
-
-
 MeshHeap::MeshHeap(int size) : mMeshes(size), mModels(size) {}
-
-
 
 int MeshHeap::size() const {
     return mMeshes.size();
 }
-
-
 
 void MeshHeap::set(Mesh&& mesh, const glm::vec3& offset, int index) {
     glm::mat4 model (1);
@@ -22,8 +16,6 @@ void MeshHeap::set(Mesh&& mesh, const glm::mat4& model, int index) {
     mMeshes[index] = std::move(mesh);
     mModels[index] = model;
 }
-
-
 
 const Mesh& MeshHeap::getMesh(int index) const {
     return mMeshes[index];

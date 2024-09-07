@@ -1,10 +1,8 @@
-#ifndef MINECRAFT_LINEBATCH_H
-#define MINECRAFT_LINEBATCH_H
+#pragma once
 
 #include <headers/includes.h>
 
 #include <engine/graphics/Mesh.h>
-
 
 class LineBatch {
 
@@ -26,5 +24,3 @@ public:
 
     void draw() const;
 };
-
-#endif //MINECRAFT_LINEBATCH_H

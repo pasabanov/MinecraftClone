@@ -1,18 +1,12 @@
 #include <engine/voxel/Chunk.h>
 
-
-
 bool Chunk::voxelExists(int x, int y, int z) {
     return x >= 0 && x < Chunk::WIDTH && y >= 0 && y < Chunk::HEIGHT && z >= 0 && z < Chunk::LENGTH;
 }
 
-
-
 Chunk::Chunk(int x, int y, int z, const VoxelGenerator& generator) : mX(x), mY(y), mZ(z), mVoxels(VOLUME) {
     generateVoxels(generator);
 }
-
-
 
 void Chunk::generateVoxels(const VoxelGenerator& generator) {
     if (generator == nullptr)
@@ -22,8 +16,6 @@ void Chunk::generateVoxels(const VoxelGenerator& generator) {
             for (uint x = 0; x < WIDTH; ++x)
                 setVoxel(x, y, z, generator(x, y, z));
 }
-
-
 
 int Chunk::getX() const {
     return mX;
@@ -49,8 +41,6 @@ void Chunk::setZ(int z) {
     mZ = z;
 }
 
-
-
 Voxel& Chunk::getVoxel(uint x, uint y, uint z) {
     return mVoxels[(y * LENGTH + z) * WIDTH + x];
 }
@@ -63,8 +53,6 @@ void Chunk::setVoxel(uint x, uint y, uint z, const Voxel& voxel) {
     mVoxels[(y * LENGTH + z) * WIDTH + x] = voxel;
     setModified(true);
 }
-
-
 
 ubyte Chunk::getLight(int x, int y, int z, int channel) const {
     if (voxelExists(x, y, z))
@@ -79,7 +67,6 @@ void Chunk::setLight(int x, int y, int z, int channel, int value) {
     }
 }
 
-
 bool Chunk::isModified() const {
     return mModified;
 }
@@ -87,8 +74,6 @@ bool Chunk::isModified() const {
 void Chunk::setModified(bool modified) {
     mModified = modified;
 }
-
-
 
 Voxel& Chunk::getVoxel(int index) {
     return mVoxels[index];
