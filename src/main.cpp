@@ -6,35 +6,35 @@
 
 int main() {
 
-    Window window (Application::APP_NAME);
+	Window window (Application::APP_NAME);
 
-    window.setView(
-	    std::make_unique<VoxelWorld>(
-		    window.getWidth(),
-		    window.getHeight(),
-		    2, 1, 2
-	    )
-    );
+	window.setView(
+		std::make_unique<VoxelWorld>(
+			window.getWidth(),
+			window.getHeight(),
+			2, 1, 2
+		)
+	);
 
-    window.fillColor(0.6, 0.62, 0.65);
+	window.fillColor(0.6, 0.62, 0.65);
 
-    while(!window.isShouldClose()) {
+	while(!window.isShouldClose()) {
 
-        window.pollEvents();
+		window.pollEvents();
 
-        if (window.keyJustPressed(GLFW_KEY_ESCAPE)) {
-            window.setShouldClose(true);
-        }
-        if (window.keyJustPressed(GLFW_KEY_F2)) {
-            static_cast<const VoxelWorld&>(*window.getView()).save("world.bin");
-        }
-        if (window.keyJustPressed(GLFW_KEY_F3)) {
-            static_cast<VoxelWorld&>(*window.getView()).load("world.bin");
-        }
-        if (window.keyJustPressed(GLFW_KEY_TAB)) {
-            window.toggleCursor();
-        }
+		if (window.keyJustPressed(GLFW_KEY_ESCAPE)) {
+			window.setShouldClose(true);
+		}
+		if (window.keyJustPressed(GLFW_KEY_F2)) {
+			static_cast<const VoxelWorld&>(*window.getView()).save("world.bin");
+		}
+		if (window.keyJustPressed(GLFW_KEY_F3)) {
+			static_cast<VoxelWorld&>(*window.getView()).load("world.bin");
+		}
+		if (window.keyJustPressed(GLFW_KEY_TAB)) {
+			window.toggleCursor();
+		}
 
-        window.refresh();
-    }
+		window.refresh();
+	}
 }

@@ -6,25 +6,25 @@
 
 class LightEntry {
 public:
-    int x, y, z;
-    uchar light;
+	int x, y, z;
+	uchar light;
 };
 
 class LightSolver {
 
-    std::queue<LightEntry> mAddQueue, mRemQueue;
-    ChunkHeap* mChunks;
-    int mChannel;
+	std::queue<LightEntry> mAddQueue, mRemQueue;
+	ChunkHeap* mChunks;
+	int mChannel;
 
 public:
 
-    LightSolver(ChunkHeap* chunks, int channel);
+	LightSolver(ChunkHeap* chunks, int channel);
 
-    void add(int x, int y, int z);
+	void add(int x, int y, int z);
 
-    void add(int x, int y, int z, int emission);
+	void add(int x, int y, int z, int emission);
 
-    void remove(int x, int y, int z);
+	void remove(int x, int y, int z);
 
-    void solve();
+	void solve();
 };

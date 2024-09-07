@@ -5,22 +5,22 @@ View::View(int width, int height) : mWidth(width), mHeight(height) {}
 View::~View() {}
 
 int View::getWidth() const {
-    return mWidth;
+	return mWidth;
 }
 
 void View::setWidth(int width) {
-    mWidth = width;
+	mWidth = width;
 }
 
 int View::getHeight() const {
-    return mHeight;
+	return mHeight;
 }
 
 void View::setHeight(int height) {
-    mHeight = height;
+	mHeight = height;
 }
 
 void View::refresh() {
-    update();
-    draw();
+	update();
+	draw();
 }

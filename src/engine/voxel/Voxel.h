@@ -4,15 +4,15 @@
 
 class Voxel {
 
-    uint mId;
+	uint mId;
 
 public:
 
-    Voxel(uint id = 0);
+	Voxel(uint id = 0);
 
-    uint& getId();
-    uint getId() const;
-    void setId(uint id);
+	uint& getId();
+	uint getId() const;
+	void setId(uint id);
 
-    bool operator==(const Voxel& other) const;
+	bool operator==(const Voxel& other) const;
 };

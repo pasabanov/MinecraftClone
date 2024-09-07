@@ -1,152 +1,152 @@
 #include <engine/camera/Camera.h>
 
 void Camera::updateVectors() {
-    mFront = glm::vec3(mRotation * glm::vec4(0, 0, -1, 1));
-    mRight = glm::vec3(mRotation * glm::vec4(-1, 0, 0, 1));
-    mUp = glm::vec3(mRotation * glm::vec4(0, 1, 0, 1));
+	mFront = glm::vec3(mRotation * glm::vec4(0, 0, -1, 1));
+	mRight = glm::vec3(mRotation * glm::vec4(-1, 0, 0, 1));
+	mUp = glm::vec3(mRotation * glm::vec4(0, 1, 0, 1));
 }
 
 Camera::Camera(
-        const glm::vec3& position,
-        float fieldOfView,
-        float aspect,
-        float zNear,
-        float zFar,
-        float speed,
-        float sensX,
-        float sensY,
-        float rotX,
-        float rotY)
+		const glm::vec3& position,
+		float fieldOfView,
+		float aspect,
+		float zNear,
+		float zFar,
+		float speed,
+		float sensX,
+		float sensY,
+		float rotX,
+		float rotY)
 : mPosition(position), mFieldOfView(fieldOfView), mAspect(aspect)
 , mZNear(zNear), mZFar(zFar), mRotation(1),
   mSpeed(speed), mSensX(sensX), mSensY(sensY),
   mRotX(rotX), mRotY(rotY) {
-    updateVectors();
+	updateVectors();
 }
 
 void Camera::move(const glm::vec3& vec) {
-    mPosition = vec;
+	mPosition = vec;
 }
 
 void Camera::moveDirect(const glm::vec3& vec) {
-    mPosition += vec;
+	mPosition += vec;
 }
 
 void Camera::moveRelative(const glm::vec3& vec) {
-    mPosition += mFront * vec.x + mRight * vec.y + mUp * vec.z;
+	mPosition += mFront * vec.x + mRight * vec.y + mUp * vec.z;
 }
 
 void Camera::rotate(const glm::vec3& vec) {
-    mRotation = glm::rotate(mRotation, vec.z, glm::vec3(0, 0, 1));
-    mRotation = glm::rotate(mRotation, vec.y, glm::vec3(0, 1, 0));
-    mRotation = glm::rotate(mRotation, vec.x, glm::vec3(1, 0, 0));
-    updateVectors();
+	mRotation = glm::rotate(mRotation, vec.z, glm::vec3(0, 0, 1));
+	mRotation = glm::rotate(mRotation, vec.y, glm::vec3(0, 1, 0));
+	mRotation = glm::rotate(mRotation, vec.x, glm::vec3(1, 0, 0));
+	updateVectors();
 }
 
 const glm::vec3& Camera::getPosition() const {
-    return mPosition;
+	return mPosition;
 }
 
 const glm::vec3& Camera::getFront() const {
-    return mFront;
+	return mFront;
 }
 
 const glm::vec3& Camera::getUp() const {
-    return mUp;
+	return mUp;
 }
 
 const glm::vec3& Camera::getRight() const {
-    return mRight;
+	return mRight;
 }
 
 const glm::mat4& Camera::getRotation() const {
-    return mRotation;
+	return mRotation;
 }
 
 void Camera::setRotation(const glm::mat4& rotation) {
-    mRotation = rotation;
+	mRotation = rotation;
 }
 
 float Camera::getAspect() const {
-    return mAspect;
+	return mAspect;
 }
 
 void Camera::setAspect(float aspect) {
-    mAspect = aspect;
+	mAspect = aspect;
 }
 
 float Camera::getSpeed() const {
-    return mSpeed;
+	return mSpeed;
 }
 
 void Camera::setSpeed(float speed) {
-    mSpeed = speed;
+	mSpeed = speed;
 }
 
 float Camera::getSensX() const {
-    return mSensX;
+	return mSensX;
 }
 
 void Camera::setSensX(float sensX) {
-    mSensX = sensX;
+	mSensX = sensX;
 }
 
 float Camera::getSensY() const {
-    return mSensY;
+	return mSensY;
 }
 
 void Camera::setSensY(float sensY) {
-    mSensY = sensY;
+	mSensY = sensY;
 }
 
 float Camera::getRotX() const {
-    return mRotX;
+	return mRotX;
 }
 
 void Camera::setRotX(float rotX) {
-    mRotX = rotX;
+	mRotX = rotX;
 }
 
 void Camera::addRotX(float rotX) {
-    mRotX += rotX;
+	mRotX += rotX;
 }
 
 float Camera::getRotY() const {
-    return mRotY;
+	return mRotY;
 }
 
 void Camera::setRotY(float rotY) {
-    mRotY = rotY;
+	mRotY = rotY;
 }
 
 void Camera::addRotY(float rotY) {
-    mRotY += rotY;
+	mRotY += rotY;
 }
 
 float Camera::getZNear() const {
-    return mZNear;
+	return mZNear;
 }
 
 void Camera::setZNear(float zNear) {
-    mZNear = zNear;
+	mZNear = zNear;
 }
 
 float Camera::getZFar() const {
-    return mZFar;
+	return mZFar;
 }
 
 void Camera::setZFar(float zFar) {
-    mZFar = zFar;
+	mZFar = zFar;
 }
 
 glm::mat4 Camera::getProjection() const {
-    return glm::perspective(mFieldOfView, mAspect, mZNear, mZFar);
+	return glm::perspective(mFieldOfView, mAspect, mZNear, mZFar);
 }
 
 glm::mat4 Camera::getView() const {
-    return glm::lookAt(mPosition, mPosition + mFront, mUp);
+	return glm::lookAt(mPosition, mPosition + mFront, mUp);
 }
 
 glm::mat4 Camera::getProjView() const {
-    return getProjection() * getView();
+	return getProjection() * getView();
 }

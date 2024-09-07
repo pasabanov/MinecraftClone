@@ -4,22 +4,22 @@
 
 class Mesh {
 
-    uint mVAO = GL_NONE, mVBO = GL_NONE;
-    uint mVerticesCount = 0;
+	uint mVAO = GL_NONE, mVBO = GL_NONE;
+	uint mVerticesCount = 0;
 
-    void glDelete();
+	void glDelete();
 
 public:
 
-    Mesh();
-    Mesh(const float* buffer, uint verticesCount, const int* attrs);
-    Mesh(Mesh&& other) noexcept;
+	Mesh();
+	Mesh(const float* buffer, uint verticesCount, const int* attrs);
+	Mesh(Mesh&& other) noexcept;
 
-    ~Mesh();
+	~Mesh();
 
-    Mesh& operator=(Mesh&& other) noexcept;
+	Mesh& operator=(Mesh&& other) noexcept;
 
-    void create(const float* buffer, uint verticesCount, const int* attrs);
+	void create(const float* buffer, uint verticesCount, const int* attrs);
 
-    void draw(uint primitive = GL_TRIANGLES) const;
+	void draw(uint primitive = GL_TRIANGLES) const;
 };
