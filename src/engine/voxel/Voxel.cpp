@@ -3,17 +3,17 @@
 Voxel::Voxel(uint id) : mId(id) {}
 
 uint& Voxel::getId() {
-    return mId;
+	return mId;
 }
 
 uint Voxel::getId() const {
-    return mId;
+	return mId;
 }
 
 void Voxel::setId(uint id) {
-    mId = id;
+	mId = id;
 }
 
 bool Voxel::operator==(const Voxel& other) const {
-    return mId == other.mId;
+	return mId == other.mId;
 }

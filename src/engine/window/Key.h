@@ -4,6 +4,6 @@
 
 class Key {
 public:
-    bool pressed;
-    uint frame;
+	bool pressed;
+	uint frame;
 };

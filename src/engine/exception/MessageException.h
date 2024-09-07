@@ -4,12 +4,12 @@
 
 class MessageException : public std::exception {
 
-    std::string mMessage;
+	std::string mMessage;
 
 public:
 
-    MessageException();
-    explicit MessageException(const std::string& message);
+	MessageException();
+	explicit MessageException(const std::string& message);
 
-    const char * what() const noexcept override;
+	const char * what() const noexcept override;
 };

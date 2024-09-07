@@ -10,52 +10,51 @@
 #include <engine/graphics/LineBatch.h>
 #include <engine/light/LightSolver.h>
 
-
 class VoxelWorld : public View {
 
-    inline static const float crosshair_vertices[] = {
-            -0.01, -0.01,
-            0.01, 0.01,
+	inline static const float crosshair_vertices[] = {
+			-0.01, -0.01,
+			0.01, 0.01,
 
-            -0.01, 0.01,
-            0.01, -0.01
-    };
-    inline static const int crosshair_attrs[] = { 2, 0 };
+			-0.01, 0.01,
+			0.01, -0.01
+	};
+	inline static const int crosshair_attrs[] = { 2, 0 };
 
-    VoxelsRenderer mRenderer;
-    ChunkHeap mChunks;
-    MeshHeap mMeshes;
+	VoxelsRenderer mRenderer;
+	ChunkHeap mChunks;
+	MeshHeap mMeshes;
 
-    LightSolver mSolverR;
-    LightSolver mSolverG;
-    LightSolver mSolverB;
-    LightSolver mSolverS;
+	LightSolver mSolverR;
+	LightSolver mSolverG;
+	LightSolver mSolverB;
+	LightSolver mSolverS;
 
-    Shader mTextureShader;
-    Texture2D mTexture;
+	Shader mTextureShader;
+	Texture2D mTexture;
 
-    Shader mCrosshairShader;
-    Mesh mCrosshairMesh;
+	Shader mCrosshairShader;
+	Mesh mCrosshairMesh;
 
-    Shader mLineShader;
-    LineBatch mHighlighting;
+	Shader mLineShader;
+	LineBatch mHighlighting;
 
-    Camera mCamera;
+	Camera mCamera;
 
-    void initializeLight();
+	void initializeLight();
 
 public:
 
-    VoxelWorld(int width, int height, int worldWidth, int worldHeight, int worldLength);
+	VoxelWorld(int width, int height, int worldWidth, int worldHeight, int worldLength);
 
-    void onViewSizeChanged(int width, int height) override;
+	void onViewSizeChanged(int width, int height) override;
 
-    void applyEvents(const Events &events, float elapsedTime) override;
+	void applyEvents(const Events &events, float elapsedTime) override;
 
-    void update() override;
+	void update() override;
 
-    void draw() const override;
+	void draw() const override;
 
-    void save(const std::string& filename) const;
-    void load(const std::string& filename);
+	void save(const std::string& filename) const;
+	void load(const std::string& filename);
 };
