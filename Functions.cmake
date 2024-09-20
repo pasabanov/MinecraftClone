@@ -189,8 +189,4 @@ function(add_strip_command EXECUTABLE_NAME EXECUTABLE_PATH)
 	add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
 			COMMAND strip ${STRIP_OPTIONS} ${EXECUTABLE_PATH}
 			COMMENT "Stripping executable: ${EXECUTABLE_NAME}")
-	if(PRINT_EXECUTABLE_SIZE)
-		add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD VERBATIM
-				COMMAND bash -c "size=$(stat -c%s ${EXECUTABLE_PATH}); printf 'Size after 'strip' command: %${EXECUTABLE_SIZE_OUTPUT_LENGTH}d bytes\\n' $size")
-	endif()
 endfunction()
