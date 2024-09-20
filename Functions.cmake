@@ -182,3 +182,11 @@ function(set_project_directories HEADER_DIR SOURCE_DIR TEST_DIR RESOURCE_DIR INC
 	set(LIB_FILES ${LIB_FILES} PARENT_SCOPE)
 
 endfunction()
+
+# Adds `strip` command for the executable
+function(add_strip_command EXECUTABLE_NAME EXECUTABLE_PATH)
+	cmake_parse_arguments(STRIP "" "" "OPTIONS" ${ARGN})
+	add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+			COMMAND strip ${STRIP_OPTIONS} ${EXECUTABLE_PATH}
+			COMMENT "Stripping executable: ${EXECUTABLE_NAME}")
+endfunction()

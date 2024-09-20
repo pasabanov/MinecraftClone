@@ -27,7 +27,28 @@ set_project_directories(src src test res include lib out)
 
 # EXECUTABLE
 set(EXECUTABLE_NAME ${CMAKE_PROJECT_NAME})
+set(EXECUTABLE_PATH ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${EXECUTABLE_NAME})
 add_executable(${EXECUTABLE_NAME} ${HEADER_FILES} ${SOURCE_FILES})
+
+
+# PROFILES
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+	target_compile_definitions(${EXECUTABLE_NAME} PRIVATE DEBUG _DEBUG DEBUG_MODE)
+	target_compile_options(${EXECUTABLE_NAME} PRIVATE -Wall -O0 -g3)
+elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
+	target_compile_definitions(${EXECUTABLE_NAME} PRIVATE RELEASE _RELEASE RELEASE_MODE NDEBUG NO_DEBUG)
+	target_compile_options(${EXECUTABLE_NAME} PRIVATE -O3 -flto -s -Wl,-s -Wl,--gc-sections)
+	add_strip_command(${EXECUTABLE_NAME} ${EXECUTABLE_PATH} OPTIONS -s)
+elseif (CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+	target_compile_definitions(${EXECUTABLE_NAME} PRIVATE RELEASE _RELEASE RELEASE_MODE NDEBUG NO_DEBUG RELWITHDEBINFO)
+	target_compile_options(${EXECUTABLE_NAME} PRIVATE -O2 -flto -g3)
+elseif (CMAKE_BUILD_TYPE STREQUAL "MinSize" OR CMAKE_BUILD_TYPE STREQUAL "MinSizeRel")
+	target_compile_definitions(${EXECUTABLE_NAME} PRIVATE RELEASE _RELEASE RELEASE_MODE NDEBUG NO_DEBUG MINSIZE MINSIZEREL)
+	target_compile_options(${EXECUTABLE_NAME} PRIVATE -Os -flto -s -Wl,-s -Wl,--gc-sections)
+	add_strip_command(${EXECUTABLE_NAME} ${EXECUTABLE_PATH} OPTIONS -s)
+else()
+	# do nothing
+endif()
 
 
 # LIBRARIES
