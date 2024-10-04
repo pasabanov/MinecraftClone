@@ -4,6 +4,10 @@
 
 `MinecraftClone` is a clone of Minecraft inspired and based on [this tutorial](https://www.youtube.com/playlist?list=PLslRcF4flNQKAAa7W5Jalzi2o4tWqvbKp).
 
+## Screenshots
+
+![square plain](docs/images/square-plain.png)
+
 ## License
 
 This program is free software: you can redistribute it and/or modify
